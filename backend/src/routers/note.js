@@ -67,5 +67,18 @@ router.get('/note', async (req, res) => {
   }
 });
 
+router.delete('/note',async (req, res)=>{
+  try {
+		await Note.deleteOne({ '_id': req.query._id })
+        res.status(204).json({
+            success: true
+        })
+	} catch {
+		res.status(400).json({
+            error: 'something went wrong',
+            msg: err
+          })
+	}
+})
 
 module.exports = router;
