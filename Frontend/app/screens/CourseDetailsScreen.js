@@ -2,7 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import fetchAddress from "../IP_File";
-import DropDownPicker from "react-native-dropdown-picker";
+// import DropDownPicker from "react-native-dropdown-picker";
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function CourseDetailScreen({ route, navigation }) {
   // const { userID, userType } = route.params;
@@ -10,14 +11,8 @@ export default function CourseDetailScreen({ route, navigation }) {
   const { userType } = route.params;
   const { courseName } = route.params;
   const { _id } = route.params;
-  const {trackID} = route.params;
-  const {trackName} = route.params;
-
-  // console.log(trackName);
-
-  // console.log("in course details screen");
-  // console.log(userType);
-  // console.log(_id);
+  const { trackID } = route.params;
+  const { trackName } = route.params;
 
   const [chapterName, setChapterName] = useState("");
   const [chapterNo, setChapterNo] = useState("");
@@ -57,7 +52,7 @@ export default function CourseDetailScreen({ route, navigation }) {
       setChapters(data.chapterArr);
     });
 
-  sendCred = async () => {
+  const sendCred = async () => {
     console.log("in sendCred");
     const addr = fetchAddress + "course/chapter/add";
     fetch(addr, {
@@ -76,12 +71,6 @@ export default function CourseDetailScreen({ route, navigation }) {
         try {
           if (data.error) {
             console.log("The customized error is:" + data.error);
-            // Alert.alert("Error", data.error, [
-            //   {
-            //     text: "OK",
-            //     onPress: () => console.log("Ok pressed"),
-            //   },
-            // ]);
           }
           await AsyncStorage.setItem("token", data.token);
         } catch (e) {
@@ -89,8 +78,8 @@ export default function CourseDetailScreen({ route, navigation }) {
         }
         console.log(data);
       });
-      setChapterNo("");
-      setChapterName("");
+    setChapterNo("");
+    setChapterName("");
   };
 
   return (
@@ -148,8 +137,8 @@ export default function CourseDetailScreen({ route, navigation }) {
                       userType: userType,
                       _id: _id,
                       chapterNo: item.chapterNo,
-                      trackID: trackID, 
-                      trackName: trackName
+                      trackID: trackID,
+                      trackName: trackName,
                     });
                   }}
                 >

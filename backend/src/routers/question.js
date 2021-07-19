@@ -118,6 +118,7 @@ router.patch("/question", async (req, res) => {
 // delete a question by _id
 // req.query: _id
 router.delete("/question/", async (req, res) => {
+  // console.log("in question delete");
 	try {
 		await Question.deleteOne({ _id: req.query._id })
     res.status(204).json({

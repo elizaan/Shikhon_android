@@ -4,18 +4,10 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList }
 import fetchAddress from "../IP_File";
 
 export default function CoursesScreen({ route, navigation }) {
-  // const { userID, userType } = route.params;
   const { userID } = route.params;
   const { userType } = route.params;
   const {trackID} = route.params;
   const {trackName} = route.params;
-  // console.log("in course screen");
-  // console.log(userType);
-
-  //   const [_id, set_id] = useState("");
-  //   const [name, setname] = useState("");
-  //   const [chapters, setChapters] = useState("");
-  //   const [teacher, setTeacher] = useState("");
 
   const [courses, setCourses] = useState("");
   const [courseName, setCourseName] = useState("");
@@ -23,12 +15,6 @@ export default function CoursesScreen({ route, navigation }) {
   const changeCourseNameHandler = (val) => {
     setCourseName(val);
   };
-
-  // const pressHandler = (courseName) => {
-  //   setChapters((chapters) => {
-  //     return courses.filter((course) => course.courseName != courseName);
-  //   });
-  // };
 
   const addr = fetchAddress + "course/all";
   fetch(addr)
@@ -42,10 +28,6 @@ export default function CoursesScreen({ route, navigation }) {
       } catch (e) {
         console.log("The error is: ", e);
       }
-      
-      //   console.log("data:");
-      //   console.log(data);
-      // console.log(data.courses);
     });
 
   sendCred = async () => {
@@ -65,12 +47,6 @@ export default function CoursesScreen({ route, navigation }) {
         try {
           if (data.error) {
             console.log("The customized error is:" + data.error);
-            // Alert.alert("Error", data.error, [
-            //   {
-            //     text: "OK",
-            //     onPress: () => console.log("Ok pressed"),
-            //   },
-            // ]);
           }
           await AsyncStorage.setItem("token", data.token);
         } catch (e) {
@@ -83,13 +59,6 @@ export default function CoursesScreen({ route, navigation }) {
 
   return (
     <View style={styles.fullhomescreen}>
-      {/* header */}
-      {/* <View style={styles.header}>
-        <Text style={styles.headerText}>User ID: {userID}</Text> 
-        <Text style={styles.headerText}>{userType}</Text> 
-        <Text style={styles.headerText}>All courses</Text>
-        <Text></Text>
-      </View> */}
 
       {/*form of add chapter*/}
       <View style={styles.addFrom}>
@@ -122,7 +91,7 @@ export default function CoursesScreen({ route, navigation }) {
                 <TouchableOpacity
                   style={styles.opacityButton}
                   onPress={() => {
-                    console.log("details page button tapped");
+                    // console.log("details page button tapped");
                     navigation.navigate("CourseDetails", {
                       userID: userID,
                       userType: userType,
@@ -135,11 +104,6 @@ export default function CoursesScreen({ route, navigation }) {
                 >
                   <Text style={styles.buttonText}>{item.name}</Text>
                 </TouchableOpacity>
-                {/* <Text>{item.name}</Text>
-                <Text>{item._id}</Text>
-                <View>
-                  <FlatList data={item.chapters} renderItem={({ item }) => <Text>{item.chapterName}</Text>} />
-                </View> */}
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}

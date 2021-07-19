@@ -136,12 +136,6 @@ router.delete("/course/", async(req, res) => {
 
 router.delete("/course/chapter", async(req, res) => {
     try {
-        // await Course.updateOne(
-        //     { _id: req.query._id }, 
-        //     { $pull: { chapters: { chapterNo: req.query.chapterNo } } },
-        //     false, // Upsert
-        //     true, // Multi
-        // );
 		await Course.updateOne({
             _id: req.query._id,
         }, {

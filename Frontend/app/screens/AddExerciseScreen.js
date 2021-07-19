@@ -116,12 +116,6 @@ export default function AddExerciseScreen({ route, navigation }) {
         try {
           if (data.error) {
             console.log("The customized error is:" + data.error);
-            // Alert.alert("Error", data.error, [
-            //   {
-            //     text: "OK",
-            //     onPress: () => console.log("Ok pressed"),
-            //   },
-            // ]);
           }
           //   await AsyncStorage.setItem("token", data.token);
         } catch (e) {
