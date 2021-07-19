@@ -1,159 +1,226 @@
-import * as React from "react";
-import { View, Text } from "react-native";
-export default function VideoScreen({ route, navigation }) {
-  // const { userID } = route.params;
-  // const { userType } = route.params;
-  // console.log(userType);
+import React, { useState } from 'react'
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  Button,
+  Alert
+} from 'react-native';
+
+import * as ImagePicker from 'react-native-image-picker';
+
+// import {showImagePicker} from 'react-native-image-picker';
+import {launchCamera} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+
+
+const VideoScreen = () => {
+
+  const [photo, setPhoto] = useState('');
+
+
+  const cloudinaryUpload = async (photo) => {
+    const data = new FormData()
+    data.append('file', photo)
+    data.append('upload_preset', 'shikhon')
+    data.append("cloud_name", "elixa")
+    fetch("https://api.cloudinary.com/v1_1/elixa/image/upload", {
+      method: "post",
+      body: data
+    }).then(res => res.json()).
+      then(data => {
+        setPhoto(data.secure_url)
+        // console.log(photo);
+        // console.log(data);
+      }).catch(err => {
+        Alert.alert("An Error Occured While Uploading")
+      })
+
+    
+  }
+
+  const selectPhotoTapped = async() => {
+    const options = {
+      title: 'Select Photo',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.launchImageLibrary(options, (response) => {
+
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const uri = response.assets[0].uri;
+        const type = response.assets[0].type;
+        const name = response.assets[0].fileName;
+        const source = {
+          uri,
+          type,
+          name,
+        }
+        // console.log(source);
+       cloudinaryUpload(source);
+        console.log(photo);
+      }
+    });
+  }
+
+
+  
+
+
 
   return (
     <View>
-      <Text>this is video screen</Text>
-    </View>
+      <View>
+        <Image 
+          source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg' }} 
+          style={styles.backgroundImage}>
+        </Image>
+      </View>
+      <View >
+         <Button title = "upload image" onPress= {()=> selectPhotoTapped()}
+         />
+        {/* <TouchableOpacity style={styles.uploadButton}>
+          <Text style={styles.uploadButtonText}>
+            Upload
+          </Text>
+        </TouchableOpacity> */}
+      </View>
+
+    </View >
   );
-}
+};
 
-// //     return (
-// //       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-// //         <Text>THis is Video Screen page!</Text>
-// //       </View>
-// //     );
-// //   }
+const styles = StyleSheet.create({
+  imageContainer: {
+    backgroundColor: '#fe5b29',
+    height: Dimensions.get('window').height
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
+  uploadContainer: {
+    backgroundColor: '#f6f5f8',
+    borderTopLeftRadius: 45,
+    borderTopRightRadius: 45,
+    position: 'absolute',
+    bottom: 0,
+    width: Dimensions.get('window').width,
+    height: 200,
+  },
+  uploadContainerTitle: {
+    alignSelf: 'center',
+    fontSize: 25,
+    margin: 20,
+    fontFamily: 'Roboto'
+  },
+  uploadButton: {
+    borderRadius: 16,
+    alignSelf: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 7,
+      height: 5,
+    },
+    shadowOpacity: 1.58,
+    shadowRadius: 9,
+    elevation: 4,
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#fe5b29',
+    width: Dimensions.get('window').width - 60,
+    alignItems: 'center'
+  },
+  uploadButtonText: {
+    color: '#f6f5f8',
+    fontSize: 20,
+    fontFamily: 'Roboto'
+  }
+});
+export default VideoScreen;
 
-// import React, { useState, useEffect } from 'react';
-// import { Button, Image, View, ScrollView, StyleSheet, FlatList, Text, Platform } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
-// import { Video, AVPlaybackStatus } from 'expo-av';
-// import VideoPlayer from 'expo-video-player'
-// import fetchAddress from "../IP_File";
-// import { WebView } from 'react-native-webview';
+
+
+
+
+
+// import * as React from "react";
+// import { View, Text, Button, Alert } from "react-native";
+// import * as ImagePicker from 'react-native-image-picker';
+// import * as Permissions from "react-native-permissions";
 
 // export default function VideoScreen({ route, navigation }) {
-//   const [image, setImage] = useState(null);
-//   const video = React.useRef(null);
-//   const [status, setStatus] = React.useState({});
-//   const [videos, setVideos] = useState("");
-//   const [picture, setPicture] = useState("");
+//     // const { userID } = route.params;
+//     // const { userType } = route.params;
+//     // console.log(userType);
 
-//   useEffect(() => {
-//     (async () => {
-//       if (Platform.OS !== 'web') {
-//         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-//         if (status !== 'granted') {
-//           alert('Sorry, we need camera roll permissions to make this work!');
+//     const pickFromCamera = async() =>{
+
+//       const {granted} = await Permissions.askAsync(Permissions.CAMERA)
+//       console.log("hi ," + granted);
+//       if (granted) {
+//         let data = await ImagePicker.launchCameraAsync({
+
+//           mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//           allowEditing:true,
+//           aspect:[1,1],
+//           quality:0.5
+
+
+//         })
+
+//         if(!data.cancelled){
+//           let newfile = { 
+//             uri:data.uri,
+//             type:`test/${data.uri.split(".")[1]}`,
+//             name:`test.${data.uri.split(".")[1]}` 
+
 //         }
+
+//         handleupload(newfile);
 //       }
-//     })();
-//   }, []);
 
-//   //const tempFetchaddr = fetchAddress + "file/all";
-//   const tempFetchaddr = fetchAddress + "file/8df61a8962877eacd443730a4cba3bd4.png";
-
-//   // console.log(tempFetchaddr);
-//   const addr = `${tempFetchaddr}`;
-
-//   fetch(addr)
-//     .then((res) => res.json())
-//     //.then((res) => res.data)
-//     //.then((res,err) => console.log("hi",res,"dhur",err))
-//     .then(async (data) => {
-//       try {
-//         // await AsyncStorage.getItem("token", data._id);
-//       } catch (e) {
-//         console.log("The error is: ", e);
-//       }
-//       //console.log("helloo",data);
-//       // setVideos(data);
-//       // let picture=new Buffer('binary').toString('base64');
-//       setPicture(data)
-//     });
-
-//   const pickImage = async () => {
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.All,
-//       allowsEditing: true,
-//       aspect: [4, 3],
-//       quality: 1,
-//     });
-
-//     console.log("File details here-------",result);
-
-//     if (!result.cancelled) {
-//       setImage(result.uri);
+//     }else{
+//        Alert.alert("please give permission");
 //     }
-//   };
-//   const uploadImage = async () => {
-//     // console.log("in sendCred");
-//     const addr = fetchAddress + "file/add";
-//     fetch(addr, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         topicName: topicName,
-//         courseID: _id,
-//         chapterNo: chapterNo,
-//         author: userID,
-//         content: note,
-//       }),
-//     })
-//       .then((res) => res.json())
-//       .then(async (data) => {
-//         try {
-//           if (data.error) {
-//             console.log("The customized error is:" + data.error);
-//           }
-//           await AsyncStorage.setItem("token", data.token);
-//         } catch (e) {
-//           console.log("The error is: ", e);
-//         }
-//         // console.log(data);
-//       });
-//     setTopicName("");
-//     setNote("");
-//   };
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Button title="Pick an image from camera roll" onPress={pickImage} />
-//       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-//       <Video
-//         ref={video}
-//         style={styles.video}
-//         source={{
-//           uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-//         }}
-//         useNativeControls
-//         resizeMode="contain"
-//         isLooping
-//         onPlaybackStatusUpdate={status => setStatus(() => status)}
-//       />
-//       </View>
-//   )
 
 // }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: '#FFF',
-//     flex: 1,
-//   },
-//   contentContainer: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   // container: {
-//   //   flex: 1,
-//   //   justifyContent: 'center',
-//   //   backgroundColor: '#ecf0f1',
-//   // },
-//   video: {
-//     alignSelf: 'center',
-//     width: 320,
-//     height: 200,
-//   },
-//   buttons: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
+//     const handleupload = (file) =>{
+//       const  data = new FormData();
+//       data.append('file', file);
+//       data.append('upload_preset','shikhon');
+//       data.append("cloud_name","elixa");
+
+//       fetch("https://api.cloudinary.com/v1_1/elixa/image/upload",{
+//          method: "post",
+//          body:data
+//       }).then(res=>res.json())
+
+//       then(data => {
+//         console.log(data);
+
+//       })
+      
+
+//     }
+//     return ( 
+//       <View >
+//         <Text > this is video screen </Text> 
+//         <Button title = "upload image" onPress= {()=> pickFromCamera()}
+//         />
+        
+//       </View>
+//     );
+// }
+
