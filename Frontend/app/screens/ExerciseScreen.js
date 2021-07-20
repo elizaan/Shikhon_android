@@ -3,14 +3,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ScrollView, View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import fetchAddress from "../IP_File";
 import { MaterialIcons } from "@expo/vector-icons";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function ExerciseScreen({ route, navigation }) {
+  DropDownPicker.setListMode("SCROLLVIEW");
   const { userID, userType, _id, chapterNo } = route.params;
   // console.log(userType);
 
   const [questions, setQuestions] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [showSoln, setShowSoln] = useState(false);
+  const [showNote, setShowNote] = useState(false);
   // const[correctAnswer, setCorrectAnswer] = useState("");
 
   const handleNext = () => {
@@ -19,6 +23,8 @@ export default function ExerciseScreen({ route, navigation }) {
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
       setShowAnswer(false);
+      setShowSoln(false);
+      setShowNote(false);
     }
   };
 
@@ -28,11 +34,21 @@ export default function ExerciseScreen({ route, navigation }) {
     if (prevQuestion < questions.length && prevQuestion >= 0) {
       setCurrentQuestion(prevQuestion);
       setShowAnswer(false);
+      setShowSoln(false);
+      setShowNote(false);
     }
   };
 
   const handleShowAnswer = () => {
     setShowAnswer(true);
+  };
+
+  const handleShowSoln = () => {
+    setShowSoln(true);
+  };
+
+  const handleShowNote = () => {
+    setShowNote(true);
   };
 
   const param = { courseID: _id, chapterNo: chapterNo };
@@ -55,8 +71,34 @@ export default function ExerciseScreen({ route, navigation }) {
       setQuestions(data.quesArr);
     });
 
-  const sendCred_exercise_dlt = async (item_id) => {
+  const sendCred_note_dlt_inexercise = async (item_id) => {
     console.log("here in sendCred_note_dlt");
+    const tempFetchaddr2 = fetchAddress + "note";
+    const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+
+    fetch(addr2, {
+      method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          await AsyncStorage.setItem("token", data.token);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        console.log(data);
+      });
+  };
+
+  const sendCred_exercise_dlt = async (item_id) => {
+    // console.log("in exercise delete");
+    // sendCred_note_dlt_inexercise(item_id);
     const tempFetchaddr2 = fetchAddress + "question/";
     const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
 
@@ -84,8 +126,6 @@ export default function ExerciseScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        {/* <Text style={styles.headerText}>User ID: {userID}</Text> */}
-        {/* <Text style={styles.headerText}>{userType}</Text> */}
         <Text style={styles.headerText}>Practice Problem</Text>
       </View>
 
@@ -116,54 +156,100 @@ export default function ExerciseScreen({ route, navigation }) {
 
       {/**content */}
       {userType == "Student" ? (
-        <View>
-          {questions.length === 0 ? null : (
-            <View>
+        <ScrollView>
+          <View>
+            {questions.length === 0 ? null : (
               <View>
-                <Text style={styles.questionText}>{questions[currentQuestion].description}</Text>
-                <FlatList
-                  data={questions[currentQuestion].alternatives}
-                  renderItem={({ item }) => (
-                    <View>
-                      <TouchableOpacity style={styles.answerButton}>
-                        <Text style={styles.answerText}>{item.text}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    // console.log("hello! in button");
-                    handleShowAnswer();
-                  }}
-                  style={styles.addButton}
-                >
-                  <Text style={styles.addButtonText}>Show Correct Answer</Text>
-                </TouchableOpacity>
-              </View>
-              {showAnswer ? (
                 <View>
+                  <Text style={styles.questionText}>{questions[currentQuestion].description}</Text>
                   <FlatList
                     data={questions[currentQuestion].alternatives}
                     renderItem={({ item }) => (
                       <View>
                         <TouchableOpacity style={styles.answerButton}>
-                          {item.isCorrect ? (
-                            <Text style={styles.questionText}>{"Correct answer: " + item.text}</Text>
-                          ) : null}
+                          <Text style={styles.answerText}>{item.text}</Text>
                         </TouchableOpacity>
                       </View>
                     )}
                     keyExtractor={(item, index) => index.toString()}
                   />
                 </View>
-              ) : null}
-            </View>
-          )}
-        </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // console.log("hello! in button");
+                      handleShowAnswer();
+                    }}
+                    style={styles.addButton}
+                  >
+                    <Text style={styles.addButtonText}>Show Correct Answer</Text>
+                  </TouchableOpacity>
+                </View>
+                {showAnswer ? (
+                  <View>
+                    <FlatList
+                      data={questions[currentQuestion].alternatives}
+                      renderItem={({ item }) => (
+                        <View>
+                          <TouchableOpacity style={styles.answerButton}>
+                            {item.isCorrect ? (
+                              <Text style={styles.questionText}>{"Correct answer: " + item.text}</Text>
+                            ) : null}
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
+                  </View>
+                ) : null}
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // console.log("hello! in button");
+                      handleShowSoln();
+                    }}
+                    style={styles.addButton}
+                  >
+                    {questions[currentQuestion].shortSolution ? (
+                      <Text style={styles.addButtonText}>Show Solution</Text>
+                    ) : null}
+                  </TouchableOpacity>
+                </View>
+                {showSoln ? (
+                  <View>
+                    <TouchableOpacity style={styles.answerButton}>
+                      {questions[currentQuestion].shortSolution ? (
+                        <Text style={styles.questionText}>
+                          {"Solution: " + questions[currentQuestion].shortSolution}
+                        </Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // console.log("hello! in button");
+                      handleShowNote();
+                    }}
+                    style={styles.addButton}
+                  >
+                    {questions[currentQuestion].noteID ? <Text style={styles.addButtonText}>Show Note</Text> : null}
+                  </TouchableOpacity>
+                </View>
+                {showNote ? (
+                  <View>
+                    <TouchableOpacity style={styles.answerButton}>
+                      {questions[currentQuestion].noteID ? (
+                        <Text style={styles.questionText}>{"Note: " + questions[currentQuestion].noteID}</Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+            )}
+          </View>
+        </ScrollView>
       ) : (
         <View style={styles.content}>
           {questions.length === 0 ? null : (
@@ -276,26 +362,6 @@ const styles = StyleSheet.create({
   addFrom: {
     backgroundColor: "#E0FFFF",
   },
-  addButton: {
-    // flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#add8e6",
-    borderRadius: 20,
-    marginRight: 110,
-    marginLeft: 110,
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  addViewButton: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
   seeAnswerButton: {
     flex: 1,
     backgroundColor: "#add8e6",
@@ -305,15 +371,6 @@ const styles = StyleSheet.create({
     // marginBottom: 20,
     // paddingLeft: 10,
     // paddingRight: 10,
-  },
-  addButtonText: {
-    fontSize: 18,
-    color: "#0000A0",
-    textAlign: "center",
-    justifyContent: "center",
-    fontWeight: "bold",
-    margin: 10,
-    padding: 10,
   },
   input: {
     marginTop: 20,
@@ -339,8 +396,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 80,
     marginLeft: 80,
-    marginBottom: 20,
-    marginTop: 20,
+    marginBottom: 5,
+    marginTop: 5,
   },
   addViewButton: {
     flex: 1,
@@ -439,10 +496,8 @@ const styles = StyleSheet.create({
     // paddingLeft: 20,
   },
   footer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 20,
+    paddingBottom: 15,
+    // marginBottom: 20,
   },
   item: {
     paddingLeft: 10,

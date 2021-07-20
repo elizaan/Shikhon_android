@@ -105,8 +105,8 @@ router.delete('/note',async (req, res)=>{
 
 // param: _id, body: content,topicName
 router.patch("/note", async (req, res) => {
-  // console.log(req.body.topicName);
-  // console.log(req.body.content);
+  console.log(req.body.topicName);
+  console.log(req.body.content);
 	try {
 		const note = await Note.findOne({ _id: req.query._id })
     
