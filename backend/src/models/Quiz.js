@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 // const Question = require('../models/Question')
 
 const QuizSchema = new mongoose.Schema({
-
+    quizName:{
+        type: String,
+        required: true,
+    },
     questions:
     [
         {
@@ -37,7 +40,18 @@ const QuizSchema = new mongoose.Schema({
             mark:{
                 type: Number,
                 default: 1,
-            }
+            },
+            noteID:{
+                type: String,
+            
+            },
+            shortSolution:{
+                type: String,
+               
+            },
+            topicName:{
+                type: String,
+            },
         }
     ],
     

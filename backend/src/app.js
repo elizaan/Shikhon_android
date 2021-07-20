@@ -22,6 +22,7 @@ const fileRoute = require("./routers/file");
 const postRoute = require('./routers/post');
 const QuestionRoute = require('./routers/question');
 const QuizRoute = require('./routers/quiz');
+const ScoreRoute = require('./routers/score');
 
 app.use(userRoute);
 app.use(courseRoute);
@@ -30,6 +31,7 @@ app.use(noteRoute);
 app.use(fileRoute);
 app.use(QuestionRoute)
 app.use(QuizRoute)
+app.use(ScoreRoute)
 
 require("./db/db.js");
 

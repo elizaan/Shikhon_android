@@ -12,6 +12,7 @@ router.post('/quiz/add', async (req, res) => {
   //console.log(req.body.questions[0].alternatives);
   try {
     const quiz = new Quiz({
+      quizName: req.body.quizName,
       questions: req.body.questions,
       topicName: req.body.topicName? req.body.topicName: "combined",     //optional
       courseID: req.body.courseID,

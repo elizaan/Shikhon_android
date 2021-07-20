@@ -11,7 +11,9 @@ router.post('/question/add', async (req, res) => {
   //console.log(req.user)
   try {
     const question = new Question({
-      topicName: req.body.topicName,
+      topicName: req.body.topicName,  //note Name
+      noteID: req.body.noteID ? req.body.noteID : "",  //new
+      shortSolution: req.body.shortSolution ? req.body.shortSolution : "Solve yourself",  //new
       courseID: req.body.courseID,
       chapterNo: req.body.chapterNo,
       author: req.body.author,
@@ -101,6 +103,8 @@ router.patch("/question", async (req, res) => {
     if (req.body.alternatives) question.alternatives = req.body.alternatives
 		if (req.body.chapterNo) question.chapterNo = req.body.chapterNo
 		if (req.body.topicName) question.topicName = req.body.topicName
+    if (req.body.noteID) question.noteID = req.body.noteID
+    if (req.body.shortSolution) question.shortSolution = req.body.shortSolution
 		 
     await question.save()
     
