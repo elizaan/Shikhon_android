@@ -25,6 +25,7 @@ import RegisterScreen from "./app/screens/RegisterScreen";
 import CourseDetailsScreen from "./app/screens/CourseDetailsScreen";
 import TeacherDetailsScreen from "./app/screens/TeacherDetailsScreen";
 import NoteScreen from "./app/screens/NoteScreen";
+// import NoteScreen from "./app/screens/temp_NoteScreen";
 import NoteDetailsScreen from "./app/screens/NoteDetailsScreen";
 import PdfScreen from "./app/screens/PdfScreen";
 import VideoScreen from "./app/screens/VideoScreen";

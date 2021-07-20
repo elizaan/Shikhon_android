@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect, useCallback } from "react";
 import { ScrollView, View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import fetchAddress from "../IP_File";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function ExerciseScreen({ route, navigation }) {
   const { userID, userType, _id, chapterNo } = route.params;
@@ -54,7 +55,30 @@ export default function ExerciseScreen({ route, navigation }) {
       setQuestions(data.quesArr);
     });
 
-  // console.log(questions[currentQuestion+1].description + "here");
+  const sendCred_exercise_dlt = async (item_id) => {
+    console.log("here in sendCred_note_dlt");
+    const tempFetchaddr2 = fetchAddress + "question/";
+    const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+
+    fetch(addr2, {
+      method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          await AsyncStorage.setItem("token", data.token);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        console.log(data);
+      });
+  };
 
   return (
     <View style={styles.fullhomescreen}>
@@ -142,8 +166,6 @@ export default function ExerciseScreen({ route, navigation }) {
         </View>
       ) : (
         <View style={styles.content}>
-          {/* {console.log(questions[0].description)} */}
-          {/* <Text>Teacher side</Text> */}
           {questions.length === 0 ? null : (
             <View>
               <View>
@@ -152,7 +174,20 @@ export default function ExerciseScreen({ route, navigation }) {
                   renderItem={({ item }) => (
                     <View>
                       <View style={styles.viewButton}>
-                        <Text style={styles.questionText}>{item.description}</Text>
+                        <View style={styles.item}>
+                          <Text style={styles.questionText}>{item.description}</Text>
+                          <View>
+                            {userType == "Teacher" ? (
+                              <View>
+                                <TouchableOpacity onPress={() => sendCred_exercise_dlt(item._id)}>
+                                  <View style={styles.deleteicon}>
+                                    <MaterialIcons name="delete" size={20} color="#0000A0" />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            ) : null}
+                          </View>
+                        </View>
                         {item.alternatives.map((newItem) => {
                           return (
                             <View key={newItem.uniqueId}>
@@ -169,10 +204,10 @@ export default function ExerciseScreen({ route, navigation }) {
                             <View>
                               {newItem.isCorrect ? (
                                 <View>
-                                <TouchableOpacity style={styles.answerButton}>
-                                  <Text style={styles.buttonText}>{"Correct Answer: " + newItem.text}</Text>
-                                </TouchableOpacity>
-                              </View>
+                                  <TouchableOpacity style={styles.answerButton}>
+                                    <Text style={styles.buttonText}>{"Correct Answer: " + newItem.text}</Text>
+                                  </TouchableOpacity>
+                                </View>
                               ) : null}
                             </View>
                           );
@@ -408,5 +443,20 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 20,
+  },
+  item: {
+    paddingLeft: 10,
+    justifyContent: "space-between",
+    borderRadius: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  deleteicon: {
+    paddingRight: 25,
+    // paddingBottom: 10,
+    // paddingRight: 10,
+    // marginRight: 20,
+    // paddingLeft: 10,
   },
 });

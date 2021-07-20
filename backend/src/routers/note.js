@@ -6,7 +6,7 @@ const router = express.Router()
 
 // req.body: courseID(_id),chapterNo, author, content, topicName
 router.post('/note/add', async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   //console.log(req.user)
   try {
     const note = new Note({
@@ -88,6 +88,8 @@ router.patch("/note", async (req, res) => {
 })
 
 router.delete('/note',async (req, res)=>{
+  // console.log("here in note delete");
+  // console.log(req.query._id);
   try {
 		await Note.deleteOne({ '_id': req.query._id })
         res.status(204).json({
@@ -99,6 +101,29 @@ router.delete('/note',async (req, res)=>{
             msg: err
           })
 	}
+})
+
+// param: _id, body: content,topicName
+router.patch("/note", async (req, res) => {
+  // console.log(req.body.topicName);
+  // console.log(req.body.content);
+	try {
+		const note = await Note.findOne({ _id: req.query._id })
+    
+    if (req.body.content)note.content = req.body.content
+		if (req.body.topicName) note.topicName = req.body.topicName
+		 
+    await note.save()
+    
+		res.status(200).json({
+      note : note
+    })
+	} catch (err) {
+        res.status(400).json({
+          error: 'something went wrong',
+          msg: err
+        })
+      }
 })
 
 module.exports = router;

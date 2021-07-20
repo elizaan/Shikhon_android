@@ -99,6 +99,69 @@ export default function AddQuizScreen({ route, navigation }) {
     }
   });
 
+  const sendCred_quiz_ques_add = async () => {
+    // console.log("in sendCred for adding exercise");
+    const addr = fetchAddress + "question/add";
+    fetch(addr, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topicName: topicName,
+        courseID: _id,
+        chapterNo: chapterNo,
+        author: userID,
+        description: description,
+        //alternatives
+        alternatives: [
+          { isCorrect: value1, text: option1 },
+          { isCorrect: value2, text: option2 },
+          { isCorrect: value3, text: option3 },
+          { isCorrect: value4, text: option4 },
+        ],
+        mark: mark,
+      }),
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          //   await AsyncStorage.setItem("token", data.token);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        // console.log(data);
+      });
+  };
+
+  const sendCred_quiz_ques_dlt = async (item_id) => {
+    console.log("here in sendCred_note_dlt");
+    const tempFetchaddr2 = fetchAddress + "question/";
+    const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+
+    fetch(addr2, {
+      method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          await AsyncStorage.setItem("token", data.token);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        console.log(data);
+      });
+  };
+
   return (
     <View style={styles.fullhomescreen}>
       {/* header */}
@@ -107,7 +170,7 @@ export default function AddQuizScreen({ route, navigation }) {
         {userType == "Student" && questions.length != 0 ? <Text style={styles.headerText}>{restime}</Text> : null }
         {/* <Text>hello!</Text> */}
       </View>
-      {/* <Text>This is quiz details page</Text> */}
+      
       {userType == "Teacher" ? (
         <View style={styles.content}>
           {questions.length === 0 ? null : (

@@ -178,6 +178,7 @@ router.patch("/quiz", async (req, res) => {
 // delete a quiz by _id
 // req.query: _id
 router.delete("/quiz", async (req, res) => {
+  // console.log("here in quiz delete");
 	try {
 		await Quiz.deleteOne({ '_id': req.query._id })
         res.status(204).json({

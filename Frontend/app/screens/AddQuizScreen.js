@@ -35,6 +35,7 @@ export default function AddQuizScreen({ route, navigation }) {
   };
 
   const sendCred_quiz = async () => {
+    // console.log("here in add quiz in frontend");
     get_totalMark();
     console.log("total Mark: " + totalMark);
     console.log("in sendCred_quiz");
