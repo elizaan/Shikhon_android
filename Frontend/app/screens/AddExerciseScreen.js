@@ -10,6 +10,8 @@ export default function AddExerciseScreen({ route, navigation }) {
   const { userID, userType, _id, chapterNo } = route.params;
 
   const [description, setDescription] = useState("");
+  const [shortSoln, setShortSoln] = useState("");
+  const [note, setNote] = useState("");
 
   var date = String(new Date()).split(" ")[3];
   date = Number(date);
@@ -54,6 +56,14 @@ export default function AddExerciseScreen({ route, navigation }) {
     setTopicName(val);
   };
 
+  const changeNoteHandler = (val) => {
+    setNote(val);
+  };
+
+  const changeSolnHandler = (val) => {
+    setShortSoln(val);
+  };
+
   const changeDescriptionHandler = (val) => {
     setDescription(val);
   };
@@ -87,7 +97,40 @@ export default function AddExerciseScreen({ route, navigation }) {
     // console.log(value2);
   };
 
+  const sendCred_addNote = async () => {
+    // console.log("in sendCred");
+    const addr = fetchAddress + "note/add";
+    fetch(addr, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        topicName: topicName,
+        courseID: _id,
+        chapterNo: chapterNo,
+        author: userID,
+        content: note,
+      }),
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          await AsyncStorage.setItem("token", data.token);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        // console.log(data);
+      });
+    setTopicName("");
+    setNote("");
+  };
+
   const sendCred_new = async () => {
+    sendCred_addNote();
     // console.log("in sendCred for adding exercise");
     const addr = fetchAddress + "question/add";
     fetch(addr, {
@@ -97,6 +140,8 @@ export default function AddExerciseScreen({ route, navigation }) {
       },
       body: JSON.stringify({
         topicName: topicName,
+        noteID: note, //etay note tai ache
+        shortSolution: shortSoln,
         courseID: _id,
         chapterNo: chapterNo,
         author: userID,
@@ -130,12 +175,24 @@ export default function AddExerciseScreen({ route, navigation }) {
       {/* <Text>THis is Add Exercise Screen page!</Text> */}
       <ScrollView>
         <View style={styles.addFrom}>
-          <TextInput
+          {/* <View>
+            <TouchableOpacity
+              onPress={() => {
+                printTopicList();
+              }}
+              style={styles.addButton}
+            >
+              <View>
+                <Text style={styles.buttonText}>Show List</Text>
+              </View>
+            </TouchableOpacity>
+          </View> */}
+          {/* <TextInput
             style={styles.input}
             placeholder="Topic Name"
             onChangeText={changeTopicNameHandler}
             value={topicName}
-          />
+          /> */}
           <TextInput
             style={styles.input}
             placeholder="Description"
@@ -209,10 +266,28 @@ export default function AddExerciseScreen({ route, navigation }) {
             onChangeText={changeMarkHandler}
             value={mark}
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Solution"
+            onChangeText={changeSolnHandler}
+            value={shortSoln}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Please enter a topic Name for the note"
+            onChangeText={changeTopicNameHandler}
+            value={topicName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Note"
+            onChangeText={changeNoteHandler}
+            value={note}
+          />
           <View>
             <TouchableOpacity
               onPress={() => {
-                // printInfo();
+                // printInfo()
                 sendCred_new();
                 navigation.navigate("AllExercises", {
                   userID: userID,
