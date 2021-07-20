@@ -37,6 +37,14 @@ const QuestionSchema = new mongoose.Schema({
         //trim: true,
         //unique: true
     },
+    noteID:{
+        type: String,
+    
+    },
+    shortSolution:{
+        type: String,
+       
+    },
     courseID:{
         type: String,
         required: true,

@@ -222,7 +222,7 @@ router.get("/user/all", async(req, res) => {
         //const user = await User.findOne({ email });
         const user = await User.find({});
         if (!user) {
-            console.log(email, password);
+            //console.log(email, password);
             return res.status(200).send({ error: "Login failed! Invalid email or password" });
         }
         res.status(200).json({
