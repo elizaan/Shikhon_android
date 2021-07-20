@@ -20,6 +20,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 const VideoScreen = () => {
 
   const [photo, setPhoto] = useState('');
+  const [showPhoto, setshowPhoto] = useState(false);
 
 
   const cloudinaryUpload = async (photo) => {
@@ -32,7 +33,8 @@ const VideoScreen = () => {
       body: data
     }).then(res => res.json()).
       then(data => {
-        setPhoto(data.secure_url)
+        setPhoto(data.secure_url);
+        setshowPhoto(true);
         // console.log(photo);
         // console.log(data);
       }).catch(err => {
@@ -66,7 +68,7 @@ const VideoScreen = () => {
           type,
           name,
         }
-        // console.log(source);
+        console.log(source);
        cloudinaryUpload(source);
         console.log(photo);
       }
@@ -80,23 +82,59 @@ const VideoScreen = () => {
 
   return (
     <View>
-      <View>
+      {showPhoto? (
+
+      <View style={styles.imageContainer}>
         <Image 
-          source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg' }} 
+          source={{ uri: photo }} 
           style={styles.backgroundImage}>
         </Image>
       </View>
-      <View >
-         <Button title = "upload image" onPress= {()=> selectPhotoTapped()}
-         />
-        {/* <TouchableOpacity style={styles.uploadButton}>
+
+      ):
+      (
+      <View style={styles.imageContainer}>
+        <Image 
+          source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg'}} 
+          style={styles.backgroundImage}>
+        </Image>
+      </View>) 
+     }
+      
+      
+      <View style={styles.uploadContainer}>
+        <Text style={styles.uploadContainerTitle}>
+          ImagePicker to Cloudinary
+        </Text>
+        <TouchableOpacity onPress={selectPhotoTapped} style={styles.uploadButton}>
           <Text style={styles.uploadButtonText}>
             Upload
           </Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
     </View >
+    // <View>
+    //   <View>
+    //     {showPhoto ? (
+    //     <View>
+    //       <Text>
+    //         the url is : {photo}
+    //       </Text>
+    //       <Image source = {{uri:'https://pbs.twimg.com/profile_images/486929358120964097/gNLINY67_400x400.png'}}/>
+         
+
+    //     </View>
+         
+    //     ): (<Text> photo not available </Text>)}
+        
+    //   </View>
+    //   <View >
+    //      <Button title = "upload image" onPress= {()=> selectPhotoTapped()}
+    //      />
+    //   </View>
+
+    // </View >
   );
 };
 
@@ -114,7 +152,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 45,
     borderTopRightRadius: 45,
     position: 'absolute',
-    bottom: 0,
+    bottom: 250,
     width: Dimensions.get('window').width,
     height: 200,
   },
