@@ -9,8 +9,12 @@ import {
   Button,
   Alert
 } from 'react-native';
+import Video from 'react-native-video';
+
+
 
 import * as ImagePicker from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker';
 
 // import {showImagePicker} from 'react-native-image-picker';
 import {launchCamera} from 'react-native-image-picker';
@@ -28,15 +32,16 @@ const VideoScreen = () => {
     data.append('file', photo)
     data.append('upload_preset', 'shikhon')
     data.append("cloud_name", "elixa")
-    fetch("https://api.cloudinary.com/v1_1/elixa/image/upload", {
+    fetch("https://api.cloudinary.com/v1_1/elixa/video/upload", {
       method: "post",
       body: data
     }).then(res => res.json()).
       then(data => {
+        console.log(data.secure_url);
         setPhoto(data.secure_url);
         setshowPhoto(true);
         // console.log(photo);
-        // console.log(data);
+        
       }).catch(err => {
         Alert.alert("An Error Occured While Uploading")
       })
@@ -45,34 +50,76 @@ const VideoScreen = () => {
   }
 
   const selectPhotoTapped = async() => {
-    const options = {
-      title: 'Select Photo',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.launchImageLibrary(options, (response) => {
 
-      console.log('Response = ', response);
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        const uri = response.assets[0].uri;
-        const type = response.assets[0].type;
-        const name = response.assets[0].fileName;
-        const source = {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.video],
+      });
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.name,
+        res.size
+      );
+
+      const uri = res.uri;
+      const type = res.type;
+      const name = res.name;
+      const source = {
           uri,
           type,
           name,
-        }
-        console.log(source);
-       cloudinaryUpload(source);
-        console.log(photo);
       }
-    });
+      console.log(source);
+      cloudinaryUpload(source);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err;
+      }
+    }
+    // const options = {
+    //   title: 'Select file',
+    //   mediaType: 'any',
+    //   path:'any',
+    //   quality: 1
+    //   // storageOptions: {
+    //   //   skipBackup: true,
+    //   //   path: 'any',
+    //   // },
+    // };
+    // ImagePicker.launchImageLibrary(options, (response) => {
+
+    //   console.log('Response = ', response);
+    //   if (response.didCancel) {
+    //     console.log('User cancelled image picker');
+    //   } else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   } else {
+    //     var t, u;
+    //     if(response.assets[0].fileName.split(":")[0] === "video"){
+    //         t = "video/mp4";
+    //         u = response.assets[0].uri+ ".mp4";
+
+    //     }
+    //     else{
+    //       t = response.assets[0].type;
+    //       u = response.assets[0].uri;
+    //     }
+    //     const uri = u;
+    //     const type = t;
+    //     const name = response.assets[0].fileName;
+    //     const source = {
+    //       uri,
+    //       type,
+    //       name,
+    //     }
+    //     console.log(source);
+    //     cloudinaryUpload(source);
+    //     // console.log(photo);
+    //   }
+    // });
   }
 
 
@@ -85,10 +132,20 @@ const VideoScreen = () => {
       {showPhoto? (
 
       <View style={styles.imageContainer}>
-        <Image 
+         {/* <Image 
           source={{ uri: photo }} 
           style={styles.backgroundImage}>
-        </Image>
+        </Image> */}
+      <Video source={{uri: photo}}   // Can be a URL or a local file.
+          ref={(ref) => {
+            this.player = ref
+          }} 
+          paused={paused}
+          resizeMode="contain"                                     // Store reference
+          onBuffer={this.onBuffer}                // Callback when remote video is buffering
+          onError={this.videoError}               // Callback when video cannot be loaded
+          style={styles.backgroundVideo} 
+      />
       </View>
 
       ):
@@ -98,6 +155,7 @@ const VideoScreen = () => {
           source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg'}} 
           style={styles.backgroundImage}>
         </Image>
+        
       </View>) 
      }
       
@@ -146,6 +204,13 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
+  },
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   uploadContainer: {
     backgroundColor: '#f6f5f8',
