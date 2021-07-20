@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   Image,
   Button,
-  Alert
+  Alert,
+  AppRegistry
 } from 'react-native';
-import Video from 'react-native-video';
+// import Video from 'react-native-video';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 
 
@@ -23,8 +25,12 @@ import {launchImageLibrary} from 'react-native-image-picker';
 
 const VideoScreen = () => {
 
+
   const [photo, setPhoto] = useState('');
   const [showPhoto, setshowPhoto] = useState(false);
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+  // console.log(status);
 
 
   const cloudinaryUpload = async (photo) => {
@@ -122,6 +128,8 @@ const VideoScreen = () => {
     // });
   }
 
+    
+
 
   
 
@@ -136,16 +144,24 @@ const VideoScreen = () => {
           source={{ uri: photo }} 
           style={styles.backgroundImage}>
         </Image> */}
-      <Video source={{uri: photo}}   // Can be a URL or a local file.
-          ref={(ref) => {
-            this.player = ref
-          }} 
-          paused={paused}
-          resizeMode="contain"                                     // Store reference
-          onBuffer={this.onBuffer}                // Callback when remote video is buffering
-          onError={this.videoError}               // Callback when video cannot be loaded
-          style={styles.backgroundVideo} 
-      />
+        <Video 
+            ref={video} 
+            style={styles.backgroundVideo}
+            source={{uri: photo}}   // Can be a URL or a local file.
+            useNativeControls
+            resizeMode="contain"
+            isLooping
+            onPlaybackStatusUpdate={status => setStatus(() => status)}
+            
+        />
+        <View style={styles.buttons}>
+          <Button
+            title={status.isPlaying ? 'Pause' : 'Play'}
+            onPress={() =>
+              status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+            }
+          />
+        </View>
       </View>
 
       ):
@@ -162,7 +178,7 @@ const VideoScreen = () => {
       
       <View style={styles.uploadContainer}>
         <Text style={styles.uploadContainerTitle}>
-          ImagePicker to Cloudinary
+          Upload lecture video
         </Text>
         <TouchableOpacity onPress={selectPhotoTapped} style={styles.uploadButton}>
           <Text style={styles.uploadButtonText}>
@@ -198,7 +214,7 @@ const VideoScreen = () => {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    backgroundColor: '#fe5b29',
+    backgroundColor: '#ffffff',
     height: Dimensions.get('window').height
   },
   backgroundImage: {
@@ -206,28 +222,38 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // bottom: 0,
+    // right: 0,
+    alignSelf: 'center',
+    width: 405,
+    height: 350,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom:0
   },
   uploadContainer: {
     backgroundColor: '#f6f5f8',
     borderTopLeftRadius: 45,
     borderTopRightRadius: 45,
     position: 'absolute',
-    bottom: 250,
+    bottom: 170,
     width: Dimensions.get('window').width,
-    height: 200,
+    height: 80,
   },
   uploadContainerTitle: {
     alignSelf: 'center',
-    fontSize: 25,
+    fontSize: 15,
     margin: 20,
     fontFamily: 'Roboto'
   },
   uploadButton: {
+    position: 'relative',
     borderRadius: 16,
     alignSelf: 'center',
     shadowColor: "#000",
@@ -236,17 +262,18 @@ const styles = StyleSheet.create({
       height: 5,
     },
     shadowOpacity: 1.58,
-    shadowRadius: 9,
+    shadowRadius: 10,
     elevation: 4,
-    margin: 10,
-    padding: 10,
+    margin: 0,
+    padding: 0,
     backgroundColor: '#fe5b29',
     width: Dimensions.get('window').width - 60,
-    alignItems: 'center'
+    alignItems: 'center',
+    bottom:9
   },
   uploadButtonText: {
     color: '#f6f5f8',
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Roboto'
   }
 });
