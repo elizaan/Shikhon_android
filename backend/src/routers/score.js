@@ -67,6 +67,12 @@ router.get('/score/leaderboard', async (req, res) => {
             }
           ]
         )
+    
+    scores.sort(function(a, b) { 
+        if((a.obtainedMark/a.totalMark*100) < (b.obtainedMark/b.totalMark*100)) return 1;
+        else return -1;
+        //return (a.obtainedMark) - (b.obtainedMark);
+    })
       //console.log(scores)
       res.status(200).json({
         scores : scores
@@ -78,7 +84,7 @@ router.get('/score/leaderboard', async (req, res) => {
       })
     }
   });
-  
+
 //For showing highest mark of all students in a quiz
 //param: quizID
 router.get('/score/highest', async (req, res) => {

@@ -23,6 +23,8 @@ const postRoute = require('./routers/post');
 const QuestionRoute = require('./routers/question');
 const QuizRoute = require('./routers/quiz');
 const ScoreRoute = require('./routers/score');
+const VideoRoute = require('./routers/video');
+const PdfRoute = require('./routers/pdf');
 
 app.use(userRoute);
 app.use(courseRoute);
@@ -32,6 +34,8 @@ app.use(fileRoute);
 app.use(QuestionRoute)
 app.use(QuizRoute)
 app.use(ScoreRoute)
+app.use(VideoRoute)
+app.use(PdfRoute)
 
 require("./db/db.js");
 

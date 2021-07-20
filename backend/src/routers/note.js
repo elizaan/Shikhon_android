@@ -14,7 +14,8 @@ router.post('/note/add', async (req, res) => {
       courseID: req.body.courseID,
       chapterNo: req.body.chapterNo,
       author: req.body.author,
-      content: req.body.content
+      content: req.body.content,
+      imageContent: req.body.imageContent ? req.body.imageContent : [""]
     })
     await note.save();
   } catch (err) {
@@ -66,13 +67,14 @@ router.get('/note', async (req, res) => {
     })
   }
 });
-// param: _id, body: content,topicName
+// param: _id, body: content,topicName,imageContent
 router.patch("/note", async (req, res) => {
 	try {
 		const note = await Note.findOne({ _id: req.query._id })
     
     if (req.body.content)note.content = req.body.content
 		if (req.body.topicName) note.topicName = req.body.topicName
+    if (req.body.imageContent) note.imageContent = req.body.imageContent
 		 
     await note.save()
     
@@ -103,27 +105,6 @@ router.delete('/note',async (req, res)=>{
 	}
 })
 
-// param: _id, body: content,topicName
-router.patch("/note", async (req, res) => {
-  console.log(req.body.topicName);
-  console.log(req.body.content);
-	try {
-		const note = await Note.findOne({ _id: req.query._id })
-    
-    if (req.body.content)note.content = req.body.content
-		if (req.body.topicName) note.topicName = req.body.topicName
-		 
-    await note.save()
-    
-		res.status(200).json({
-      note : note
-    })
-	} catch (err) {
-        res.status(400).json({
-          error: 'something went wrong',
-          msg: err
-        })
-      }
-})
+
 
 module.exports = router;

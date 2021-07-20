@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const NoteSchema = new mongoose.Schema({
+const PdfSchema = new mongoose.Schema({
     topicName:{
         type: String,
         required: true,
@@ -30,15 +30,10 @@ const NoteSchema = new mongoose.Schema({
     content:{
         type: String,
         required: true,
-    },
-    imageContent:[
-        {
-            type: String,
-        }
-    ]
+    }
     
 })
 
-const Note = mongoose.model('Note', NoteSchema)
+const Pdf = mongoose.model('Pdf', PdfSchema)
 
-module.exports = Note
+module.exports = Pdf

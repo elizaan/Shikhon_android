@@ -13,6 +13,7 @@ router.post('/question/add', async (req, res) => {
     const question = new Question({
       topicName: req.body.topicName,  //note Name
       noteID: req.body.noteID ? req.body.noteID : "",  //new
+      image: req.body.image ? req.body.image : "",  //new
       shortSolution: req.body.shortSolution ? req.body.shortSolution : "Solve yourself",  //new
       courseID: req.body.courseID,
       chapterNo: req.body.chapterNo,
@@ -105,6 +106,7 @@ router.patch("/question", async (req, res) => {
 		if (req.body.topicName) question.topicName = req.body.topicName
     if (req.body.noteID) question.noteID = req.body.noteID
     if (req.body.shortSolution) question.shortSolution = req.body.shortSolution
+    if (req.body.image) question.image = req.body.image
 		 
     await question.save()
     
