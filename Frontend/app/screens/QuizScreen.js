@@ -131,6 +131,7 @@ export default function QuizScreen({ route, navigation }) {
       <View style={styles.content}>
         <View>
           <View>
+            <Text style = {styles.headerText}> MCQ Test</Text>
             <FlatList
               data={quizes}
               renderItem={({ item }) => (
@@ -167,6 +168,7 @@ export default function QuizScreen({ route, navigation }) {
               )}
               keyExtractor={(item, index) => index.toString()}
             />
+            <Text style = {styles.headerText}>Written Exam</Text>
           </View>
         </View>
       </View>
