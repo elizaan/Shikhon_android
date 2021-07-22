@@ -4,53 +4,53 @@ import { ScrollView, View, Text, TextInput, Button, StyleSheet, TouchableOpacity
 import DropDownPicker from "react-native-dropdown-picker";
 import fetchAddress from "../IP_File";
 
-export default function AddExerciseScreen({ route, navigation }) {
+export default function EditExerciseScreen({ route, navigation }) {
   DropDownPicker.setListMode("SCROLLVIEW");
 
-  const { userID, userType, _id, chapterNo, showSubmit } = route.params;
+  const { userID, userType, _id, chapterNo, edit_item_id, editTopicName, editDescription, editAlternatives, editSoln, editNote, editMark } = route.params;
 
-  const [description, setDescription] = useState("");
-  const [shortSoln, setShortSoln] = useState("");
-  const [note, setNote] = useState("");
+  const [description, setDescription] = useState(editDescription);
+  const [shortSoln, setShortSoln] = useState(editSoln);
+  const [note, setNote] = useState(editNote);
 
   var date = String(new Date()).split(" ")[3];
   date = Number(date);
 
-  const [option1, setOption1] = useState("");
-  const [option2, setOption2] = useState("");
-  const [option3, setOption3] = useState("");
-  const [option4, setOption4] = useState("");
+  const [option1, setOption1] = useState(editAlternatives[0].text);
+  const [option2, setOption2] = useState(editAlternatives[1].text);
+  const [option3, setOption3] = useState(editAlternatives[2].text);
+  const [option4, setOption4] = useState(editAlternatives[3].text);
 
   const [open1, setOpen1] = useState(false);
-  const [value1, setValue1] = useState("");
+  const [value1, setValue1] = useState(editAlternatives[0].isCorrect);
   const [isCorrect1, setIsCorrect1] = useState([
     { label: "true", value: "true" },
     { label: "false", value: "false" },
   ]);
 
   const [open2, setOpen2] = useState(false);
-  const [value2, setValue2] = useState("");
+  const [value2, setValue2] = useState(editAlternatives[1].isCorrect);
   const [isCorrect2, setIsCorrect2] = useState([
     { label: "true", value: "true" },
     { label: "false", value: "false" },
   ]);
 
   const [open3, setOpen3] = useState(false);
-  const [value3, setValue3] = useState("");
+  const [value3, setValue3] = useState(editAlternatives[2].isCorrect);
   const [isCorrect3, setIsCorrect3] = useState([
     { label: "true", value: "true" },
     { label: "false", value: "false" },
   ]);
 
   const [open4, setOpen4] = useState(false);
-  const [value4, setValue4] = useState("");
+  const [value4, setValue4] = useState(editAlternatives[3].isCorrect);
   const [isCorrect4, setIsCorrect4] = useState([
     { label: "true", value: "true" },
     { label: "false", value: "false" },
   ]);
 
-  const [topicName, setTopicName] = useState("");
-  const [mark, setMark] = useState("");
+  const [topicName, setTopicName] = useState(editTopicName);
+  const [mark, setMark] = useState(editMark);
 
   const changeTopicNameHandler = (val) => {
     setTopicName(val);
@@ -88,53 +88,24 @@ export default function AddExerciseScreen({ route, navigation }) {
     setMark(val);
   };
 
-  const printInfo = () => {
+  const print_info = () => {
     console.log("in print info");
-    // console.log(description);
-    // console.log(option1);
+    console.log(editDescription);
+    console.log(option1);
+    console.log(value1);
+    console.log(editAlternatives[0].isCorrect);
+    // console.log(editAlternatives);
     // console.log(value1);
     // console.log(option2);
     // console.log(value2);
   };
 
-  const sendCred_addNote = async () => {
-    // console.log("in sendCred");
-    const addr = fetchAddress + "note/add";
-    fetch(addr, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        topicName: topicName,
-        courseID: _id,
-        chapterNo: chapterNo,
-        author: userID,
-        content: note,
-      }),
-    })
-      .then((res) => res.json())
-      .then(async (data) => {
-        try {
-          if (data.error) {
-            console.log("The customized error is:" + data.error);
-          }
-          await AsyncStorage.setItem("token", data.token);
-        } catch (e) {
-          console.log("The error is: ", e);
-        }
-        // console.log(data);
-      });
-    setTopicName("");
-    setNote("");
-  };
-
-  const sendCred_new = async () => {
-    sendCred_addNote();
-    // console.log("in sendCred for adding exercise");
-    const addr = fetchAddress + "question/add";
-    fetch(addr, {
-      method: "POST",
+  const sendCred_edit_exercise = async () => {
+    // console.log("in sendCred for editing exercise");
+    const tempFetchaddr3 = fetchAddress + "question";
+    const addr3 = `${tempFetchaddr3}?_id=${encodeURIComponent(edit_item_id)}`;
+    fetch(addr3, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -142,9 +113,7 @@ export default function AddExerciseScreen({ route, navigation }) {
         topicName: topicName,
         noteID: note, //etay note tai ache
         shortSolution: shortSoln,
-        courseID: _id,
-        chapterNo: chapterNo,
-        author: userID,
+        // chapterNo: chapterNo,
         description: description,
         //alternatives
         alternatives: [
@@ -153,7 +122,7 @@ export default function AddExerciseScreen({ route, navigation }) {
           { isCorrect: value3, text: option3 },
           { isCorrect: value4, text: option4 },
         ],
-        mark: mark,
+        // mark: mark,
       }),
     })
       .then((res) => res.json())
@@ -189,6 +158,7 @@ export default function AddExerciseScreen({ route, navigation }) {
             style={styles.dropDown}
             open={open1}
             placeholder="Option1 Correct Answer"
+            // defaultValue="item1"
             value={value1}
             items={isCorrect1}
             setOpen={setOpen1}
@@ -259,8 +229,8 @@ export default function AddExerciseScreen({ route, navigation }) {
           <View>
             <TouchableOpacity
               onPress={() => {
-                // printInfo()
-                sendCred_new();
+                // print_info();
+                sendCred_edit_exercise();
                 navigation.navigate("AllExercises", {
                   userID: userID,
                   userType: userType,
