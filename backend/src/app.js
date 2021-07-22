@@ -25,6 +25,7 @@ const QuizRoute = require('./routers/quiz');
 const ScoreRoute = require('./routers/score');
 const VideoRoute = require('./routers/video');
 const PdfRoute = require('./routers/pdf');
+const WrittenRoute = require('./routers/writtenExam');
 
 app.use(userRoute);
 app.use(courseRoute);
@@ -36,6 +37,7 @@ app.use(QuizRoute)
 app.use(ScoreRoute)
 app.use(VideoRoute)
 app.use(PdfRoute)
+app.use(WrittenRoute)
 
 require("./db/db.js");
 

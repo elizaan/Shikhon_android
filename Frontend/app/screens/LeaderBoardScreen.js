@@ -44,21 +44,41 @@ export default function LeaderBoardScreen({ route, navigation }) {
   
       return (
         <View style={styles.fullhomescreen}>
+        <View style={styles.header} >
+            <Text style={styles.headerText}>LeadarBoard</Text>
+        </View>
+        
           <View style={styles.content}>
-          <Text style={styles.buttonText}>Physcis 1st Paper</Text>
-          <Text style={styles.buttonText}>Name  Appeared Exams Obtained Marks Total Marks Percentage(%)</Text>
+          <Text style={styles.subheaderText}>Physics 1st Paper</Text>
+            <View style={styles.container}>
+              <View style={styles.box1}>
+                <Text style={styles.textStyle}>Name</Text>
+              </View>
+              <View style={styles.box2}>
+                <Text style={styles.textStyle}>Appeared Exams</Text>
+              </View>
+              <View style={styles.box3}>
+                <Text style={styles.textStyle}>Mark ratio</Text>
+              </View>
+              <View style={styles.box4}>
+                <Text style={styles.textStyle}>Percentage(%)</Text>
+              </View>
+            </View>
+          
+          
             <View>
                 <FlatList
                 data={scores}
                 renderItem={({ item }) => (
                   <View >
-                    
-                      {/* <Text style={styles.rowText}>{item._id.studentName + "   "+item.count+"  " + item.obtainedMark+ "    " +item.totalMark+"   "+item.obtainedMark/item.totalMark*100+ "%"}</Text> */}
-                      <Text style={styles.rowText}>{item._id.studentName}</Text>
+                    <TouchableOpacity style={styles.opacityButton}>
+                      <Text style={styles.buttonText}>{item._id.studentName + "   "+item.count+"  " + item.obtainedMark+ "/" +item.totalMark+"   "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
+                      {/* <Text style={styles.rowText}>{item._id.studentName}</Text>
                       <Text style={styles.rowText}>{item.count}</Text>
                       <Text style={styles.rowText}>{item.obtainedMark}</Text>
                       <Text style={styles.rowText}>{item.totalMark}</Text>
-                      <Text style={styles.rowText}>{item.obtainedMark/item.totalMark*100+ "%"}</Text>
+                      <Text style={styles.rowText}>{item.obtainedMark/item.totalMark*100+ "%"}</Text> */}
+                      </TouchableOpacity>
                   </View>
                 )}
                 numColumns={1}
@@ -77,15 +97,21 @@ export default function LeaderBoardScreen({ route, navigation }) {
         //justifyContent: 'center',
       },
       header: {
-        backgroundColor: "#add8e6",
+        backgroundColor: "#bdc9e6",
         //marginBottom: 15,
-        padding: 30,
+        padding: 15,
       },
       headerText: {
         fontSize: 25,
         textAlign: "center",
         fontWeight: "bold",
         color: "#0000A0",
+      },
+      subheaderText: {
+        fontSize: 20,
+        textAlign: "left",
+        fontWeight: "bold",
+        color: "#0560A0",
       },
       content: {
         backgroundColor: "white",
@@ -126,6 +152,80 @@ export default function LeaderBoardScreen({ route, navigation }) {
         //flex:1,
         flexDirection: 'row',
         margin: 1
-      }
+      },
+      tableHeaderText: {
+        width: 75,
+        height: 75,
+        backgroundColor: 'red',
+        //flex:1,
+        flexDirection: 'row',
+        margin: 1
+      },
+      container: {
+        paddingTop: 10,
+        flex: 1, 
+        flexDirection: 'row', 
+        justifyContent: 'space-evenly',  
+      },
+      box1: {
+        width: 90,
+        height: 50,
+        // Uncomment the following style to see flex effects
+        //flex: 1,
+        backgroundColor: 'steelblue'
+      },
+      box2: {
+        width: 90,
+        height: 50,
+        // Uncomment the following style to see flex effects
+        //flex: 2,
+        backgroundColor: 'pink'
+      },
+      box3: {
+        width: 90,
+        height: 50, 
+        // Uncomment the following style to see flex effects
+        //flex: 3,
+        backgroundColor: 'orange'
+      },
+      box4: {
+        width: 90,
+        height: 50, 
+        // Uncomment the following style to see flex effects
+        //flex: 3,
+        backgroundColor: 'gray'
+      },
+      
+      textStyle: {
+        color: 'black',
+        alignSelf: 'center',
+        margin: 7,
+      },
+      viewButton: {
+        flex: 1,
+        backgroundColor: "white",
+        justifyContent: "center",
+        marginTop: 25,
+        paddingLeft: 100,
+        paddingRight: 100,
+      },
+      opacityButton: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#add8e6",
+        borderRadius: 10,
+        padding: 10,
+        margin: 5,
+        
+      },
+      buttonText: {
+        fontSize: 20,
+        color: "#0000A0",
+        textAlign: "right",
+        //alignSelf: 'flex-end',
+        flex: 1
+        //fontWeight: "bold",
+      },
     });
     
