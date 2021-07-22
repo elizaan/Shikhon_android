@@ -29,6 +29,7 @@ import NoteScreen from "./app/screens/NoteScreen";
 import NoteDetailsScreen from "./app/screens/NoteDetailsScreen";
 import VideoDetailsScreen from "./app/screens/VideoDetailsScreen";
 import PdfScreen from "./app/screens/PdfScreen";
+import PdfDetailsScreen from "./app/screens/PdfDetailsScreen";
 import VideoScreen from "./app/screens/VideoScreen";
 import TeacherNotificationScreen from "./app/screens/TeacherNotificationScreen";
 import { Badge, Icon, withBadge } from "react-native-elements";
@@ -48,6 +49,7 @@ const HomeStack = createStackNavigator();
 const TeacherStack = createStackNavigator();
 const FrontStack = createStackNavigator();
 const NoteStack = createStackNavigator();
+const PdfStack = createStackNavigator();
 const VideoStack = createStackNavigator();
 const ExerciseStack = createStackNavigator();
 const QuizStack = createStackNavigator();
@@ -105,7 +107,7 @@ function ViewCourseContent({ route }) {
       />
       <TopTab.Screen
         name="Pdf"
-        component={PdfScreen}
+        component={PdfStackScreen}
         initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
       />
       <TopTab.Screen
@@ -149,6 +151,29 @@ function NoteStackScreen({ route }) {
     </NoteStack.Navigator>
   );
 }
+
+function PdfStackScreen({ route }) {
+  const { userID, userType, _id, chapterNo } = route.params;
+  return (
+    <PdfStack.Navigator>
+      <PdfStack.Screen
+        name="AllPdfs"
+        component={PdfScreen}
+        options={{ title: "All Pdfs" }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
+      />
+      <PdfStack.Screen
+        options={{ headerShown: false }}
+        name="PdfDetails"
+        component={PdfDetailsScreen}
+        options={{ title: "Pdf Details" }}
+        // initialParams={{ userID: 100, userType: "Teacher" }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
+      />
+    </PdfStack.Navigator>
+  );
+}
+
 
 function VideoStackScreen({ route }) {
   const { userID, userType, _id, chapterNo } = route.params;
