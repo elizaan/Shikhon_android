@@ -17,6 +17,8 @@ export default function ExerciseScreen({ route, navigation }) {
   const [showNote, setShowNote] = useState(false);
   // const[correctAnswer, setCorrectAnswer] = useState("");
 
+  
+
   const handleNext = () => {
     // console.log("pressed next");
     const nextQuestion = currentQuestion + 1;
@@ -71,56 +73,31 @@ export default function ExerciseScreen({ route, navigation }) {
       setQuestions(data.quesArr);
     });
 
-  const sendCred_note_dlt_inexercise = async (item_id) => {
-    console.log("here in sendCred_note_dlt");
-    const tempFetchaddr2 = fetchAddress + "note";
-    const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
-
-    fetch(addr2, {
-      method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-    })
-      .then((res) => res.json())
-      .then(async (data) => {
-        try {
-          if (data.error) {
-            console.log("The customized error is:" + data.error);
+    const sendCred_exercise_dlt = async (item_id) => {
+      // console.log("in exercise delete");
+      // sendCred_note_dlt_inexercise(item_id);
+      const tempFetchaddr2 = fetchAddress + "question/";
+      const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+  
+      fetch(addr2, {
+        method: "DELETE",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          try {
+            if (data.error) {
+              console.log("The customized error is:" + data.error);
+            }
+            await AsyncStorage.setItem("token", data.token);
+          } catch (e) {
+            console.log("The error is: ", e);
           }
-          await AsyncStorage.setItem("token", data.token);
-        } catch (e) {
-          console.log("The error is: ", e);
-        }
-        console.log(data);
-      });
-  };
-
-  const sendCred_exercise_dlt = async (item_id) => {
-    // console.log("in exercise delete");
-    // sendCred_note_dlt_inexercise(item_id);
-    const tempFetchaddr2 = fetchAddress + "question/";
-    const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
-
-    fetch(addr2, {
-      method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-    })
-      .then((res) => res.json())
-      .then(async (data) => {
-        try {
-          if (data.error) {
-            console.log("The customized error is:" + data.error);
-          }
-          await AsyncStorage.setItem("token", data.token);
-        } catch (e) {
-          console.log("The error is: ", e);
-        }
-        console.log(data);
-      });
-  };
+          console.log(data);
+        });
+    };
 
   return (
     <View style={styles.fullhomescreen}>
@@ -260,9 +237,35 @@ export default function ExerciseScreen({ route, navigation }) {
                   renderItem={({ item }) => (
                     <View>
                       <View style={styles.viewButton}>
-                        <View style={styles.item}>
+                        {/* <View style={styles.item}> */}
+                        <View>
                           <Text style={styles.questionText}>{item.description}</Text>
-                          <View>
+                          <View style={styles.item}>
+                            {userType == "Teacher" ? (
+                              <View>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    navigation.navigate("EditExercise", {
+                                      userID: userID,
+                                      userType: userType,
+                                      _id: _id,
+                                      chapterNo: chapterNo,
+                                      edit_item_id: item._id,
+                                      editTopicName: item.topicName,
+                                      editDescription: item.description,
+                                      editAlternatives: item.alternatives,
+                                      editSoln: item.shortSolution,
+                                      editNote: item.noteID,
+                                      editMark: item.mark
+                                    });
+                                  }}
+                                >
+                                  <View style={styles.deleteicon}>
+                                    <MaterialIcons name="update" size={20} color="#0000A0" />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            ) : null}
                             {userType == "Teacher" ? (
                               <View>
                                 <TouchableOpacity onPress={() => sendCred_exercise_dlt(item._id)}>
@@ -501,7 +504,7 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingLeft: 10,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     borderRadius: 1,
     borderRadius: 10,
     flexDirection: "row",

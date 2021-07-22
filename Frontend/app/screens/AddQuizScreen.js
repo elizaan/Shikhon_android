@@ -7,7 +7,7 @@ import fetchAddress from "../IP_File";
 export default function AddQuizScreen({ route, navigation }) {
   // DropDownPicker.setListMode("SCROLLVIEW");
 
-  const { userID, userType, _id, chapterNo, trackID, trackName, questions } = route.params;
+  const { userID, userType, _id, chapterNo, trackID, trackName, quizName, questions } = route.params;
 
   var quiz_id = 1;
   var quiz_name = "quiz ID " + quiz_id;
@@ -46,6 +46,7 @@ export default function AddQuizScreen({ route, navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        quizName: quizName,
         questions: questions,
         topicName: quiz_name,
         courseID: _id,
@@ -72,7 +73,7 @@ export default function AddQuizScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>quiz ID: {quiz_id}</Text>
+        <Text style={styles.headerText}>{quizName}</Text>
         {/* <Text>hello!</Text> */}
       </View>
 

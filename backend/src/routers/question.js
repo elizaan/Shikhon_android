@@ -97,19 +97,26 @@ router.get('/question', async (req, res) => {
 // ref.query: _id
 // ref.body: topicName, alternatives, description, chapterNo (What you want to update , pass only that)
 router.patch("/question", async (req, res) => {
+  // console.log("in question edit backend");
+  // console.log("id: " + req.query._id);
+  // console.log(req.body.description);
+  // console.log(req.body.alternatives);
+  // // console.log(req.body.chapterNo);
+  // console.log(req.body.topicName);
+  // console.log(req.body.noteID);
+  // console.log(req.body.shortSolution);
 	try {
 		const question = await Question.findOne({ _id: req.query._id })
+    // console.log("hello after question");
     
     if (req.body.description) question.description = req.body.description
     if (req.body.alternatives) question.alternatives = req.body.alternatives
-		if (req.body.chapterNo) question.chapterNo = req.body.chapterNo
+		// if (req.body.chapterNo) question.chapterNo = req.body.chapterNo
 		if (req.body.topicName) question.topicName = req.body.topicName
     if (req.body.noteID) question.noteID = req.body.noteID
     if (req.body.shortSolution) question.shortSolution = req.body.shortSolution
-    if (req.body.image) question.image = req.body.image
-		 
+    // if (req.body.image) question.image = req.body.image
     await question.save()
-    
 		res.status(200).json({
       question : question
     })
