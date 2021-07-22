@@ -10,6 +10,7 @@ export default function QuizScreen({ route, navigation }) {
   //   console.log(userType);
 
   const [topicName, setTopicName] = useState("");
+  const [quizName, setQuizName] = useState("");
 
   const [quizes, setQuizes] = useState("");
 
@@ -46,6 +47,10 @@ export default function QuizScreen({ route, navigation }) {
 
   const changeTopicNameHandler = (val) => {
     setTopicName(val);
+  };
+
+  const changeQuizNameHandler = (val) => {
+    setQuizName(val);
   };
 
   const handleAnswerOptionClick = (isCorrect) => {
@@ -91,6 +96,12 @@ export default function QuizScreen({ route, navigation }) {
       <View style={styles.addFrom}>
         {userType != "Teacher" ? null : (
           <View>
+            <TextInput
+              style={styles.input}
+              placeholder="New Quiz Name"
+              onChangeText={changeQuizNameHandler}
+              value={quizName}
+            />
             <View>
               <TouchableOpacity
                 onPress={() => {
@@ -101,8 +112,10 @@ export default function QuizScreen({ route, navigation }) {
                     chapterNo: chapterNo,
                     trackID: trackID,
                     trackName: trackName,
+                    quizName: quizName,
                     questions: [],
                   });
+                  setQuizName("");
                 }}
                 style={styles.addButton}
               >
@@ -136,7 +149,7 @@ export default function QuizScreen({ route, navigation }) {
                         });
                       }}
                     >
-                      <Text style={styles.buttonText}>{item.topicName}</Text>
+                      <Text style={styles.buttonText}>{item.quizName}</Text>
                     </TouchableOpacity>
                   </View>
                   <View>
@@ -270,7 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#add8e6",
     borderRadius: 20,
-    paddingLeft: 40,
+    paddingLeft: 10,
     paddingRight: 40,
     marginLeft: 20,
     marginRight: 20,

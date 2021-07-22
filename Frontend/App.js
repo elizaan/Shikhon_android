@@ -33,6 +33,7 @@ import TeacherNotificationScreen from "./app/screens/TeacherNotificationScreen";
 import { Badge, Icon, withBadge } from "react-native-elements";
 import ExerciseScreen from "./app/screens/ExerciseScreen";
 import AddExerciseScreen from "./app/screens/AddExerciseScreen";
+import EditExerciseScreen from "./app/screens/EditExerciseScreen";
 import QuizScreen from "./app/screens/QuizScreen";
 // import QuizScreen from "./app/screens/temp_QuizScreen";
 import QuizDetailsScreen from "./app/screens/QuizDetailsScreen";
@@ -162,6 +163,14 @@ function ExerciseStackScreen({ route }) {
         name="AddExercise"
         component={AddExerciseScreen}
         options={{ title: "Add Exercise" }}
+        // initialParams={{ userID: 100, userType: "Teacher" }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
+      />
+            <ExerciseStack.Screen
+        options={{ headerShown: false }}
+        name="EditExercise"
+        component={EditExerciseScreen}
+        options={{ title: "Edit Exercise" }}
         // initialParams={{ userID: 100, userType: "Teacher" }}
         initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
       />
