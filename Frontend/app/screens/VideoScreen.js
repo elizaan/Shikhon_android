@@ -8,7 +8,9 @@ import {
   Image,
   Button,
   Alert,
-  AppRegistry
+  AppRegistry,
+  FlatList,
+  TextInput
 } from 'react-native';
 // import Video from 'react-native-video';
 import { Video, AVPlaybackStatus } from 'expo-av';
@@ -21,16 +23,53 @@ import DocumentPicker from 'react-native-document-picker';
 // import {showImagePicker} from 'react-native-image-picker';
 import {launchCamera} from 'react-native-image-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
+import fetchAddress from "../IP_File";
+import { MaterialIcons } from "@expo/vector-icons";
 
 
-const VideoScreen = () => {
+const VideoScreen = ({route, navigation }) => {
 
 
   const [photo, setPhoto] = useState('');
   const [showPhoto, setshowPhoto] = useState(false);
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
-  // console.log(status);
+  const [videos, setVideos] = useState("");
+  const [video, setVideo] = useState("");
+  const [topicName, setTopicName] = useState("");
+
+  const [showSubmit, setShowSubmit] = useState(0);
+ 
+  const changeNoteHandler = (val) => {
+    setVideo(val);
+  };
+
+  const changeTopicNameHandler = (val) => {
+    setTopicName(val);
+  };
+
+  const { userID, userType, _id, chapterNo } = route.params;
+  // console.log("_id printing in NoteScreen",userID,userType,_id,chapterNo)
+  const param = { courseID: _id, chapterNo: chapterNo };
+
+  const tempFetchaddr = fetchAddress + "video/all";
+
+  const addr = `${tempFetchaddr}?courseID=${encodeURIComponent(param.courseID)}&chapterNo=${encodeURIComponent(
+    param.chapterNo
+  )}`;
+
+  fetch(addr)
+    .then((res) => res.json())
+    // .then((res) => res.text())
+    .then(async (data) => {
+      try {
+        // await AsyncStorage.getItem("token", data._id);
+      } catch (e) {
+        console.log("The error is: ", e);
+      }
+      // console.log("data:");
+      // console.log(data);
+      // console.log(data.noteArr);
+      setVideos(data.videoArr);
+    });
 
 
   const cloudinaryUpload = async (photo) => {
@@ -44,7 +83,7 @@ const VideoScreen = () => {
     }).then(res => res.json()).
       then(data => {
         console.log(data.secure_url);
-        setPhoto(data.secure_url);
+        setVideo(data.secure_url);
         setshowPhoto(true);
         // console.log(photo);
         
@@ -85,6 +124,112 @@ const VideoScreen = () => {
         throw err;
       }
     }
+  }
+    const sendVid = async () => {
+      // console.log("in sendCred");
+      await selectPhotoTapped();
+      const addr = fetchAddress + "video/add";
+      fetch(addr, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          topicName: topicName,
+          courseID: _id,
+          chapterNo: chapterNo,
+          author: userID,
+          content: video,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          try {
+            if (data.error) {
+              console.log("The customized error is:" + data.error);
+            }
+            
+          } catch (e) {
+            console.log("The error is: ", e);
+          }
+          // console.log(data);
+        });
+      // setTopicName("");
+      // setVideo("");
+    };
+
+    const sendVid_video_dlt = async (item_id) => {
+      console.log("here in dlt");
+      const tempFetchaddr2 = fetchAddress + "video";
+      const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+  
+      fetch(addr2, {
+        method: "DELETE",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          try {
+            if (data.error) {
+              console.log("The customized error is:" + data.error);
+            }
+            
+          } catch (e) {
+            console.log("The error is: ", e);
+          }
+          console.log(data);
+        });
+    };
+
+
+    const [editAdrr, setEditAddr] = useState("");
+    const sendVid_video_edit_set = async (item_id, item_topicName, item_content) => {
+      // console.log(item_topicName);
+      // console.log(item_content);
+      setShowSubmit(1);
+      setTopicName(item_topicName);
+      setVideo(item_content);
+  
+      const tempFetchaddr3 = fetchAddress + "video";
+      const addr3 = `${tempFetchaddr3}?_id=${encodeURIComponent(item_id)}`;
+      setEditAddr(addr3);
+    };
+  
+    const sendCred_video_edit = async () => {
+      // console.log("here in note edit: " + editAdrr);
+      await selectPhotoTapped();
+
+      fetch(editAdrr, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content:  video,
+          topicName: topicName,
+        }),
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          try {
+            if (data.error) {
+              console.log("The customized error is:" + data.error);
+            }
+            
+          } catch (e) {
+            console.log("The error is: ", e);
+          }
+          console.log(data);
+        });
+      setShowSubmit(0);
+      setTopicName("");
+      setVideo("");
+    };
+
+
+
     // const options = {
     //   title: 'Select file',
     //   mediaType: 'any',
@@ -126,7 +271,7 @@ const VideoScreen = () => {
     //     // console.log(photo);
     //   }
     // });
-  }
+  
 
     
 
@@ -136,83 +281,271 @@ const VideoScreen = () => {
 
 
   return (
-    <View>
-      {showPhoto? (
 
-      <View style={styles.imageContainer}>
-         {/* <Image 
-          source={{ uri: photo }} 
-          style={styles.backgroundImage}>
-        </Image> */}
-        <Video 
-            ref={video} 
-            style={styles.backgroundVideo}
-            source={{uri: photo}}   // Can be a URL or a local file.
-            useNativeControls
-            resizeMode="contain"
-            isLooping
-            onPlaybackStatusUpdate={status => setStatus(() => status)}
-            
-        />
-        <View style={styles.buttons}>
-          <Button
-            title={status.isPlaying ? 'Pause' : 'Play'}
-            onPress={() =>
-              status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
-            }
+    <View style={styles.fullhomescreen}>
+    
+    <View style={styles.addFrom}>
+      {userType != "Teacher" ? null : (
+        <View>
+          <TextInput
+            style={styles.input}
+            placeholder="Topic Name"
+            onChangeText={changeTopicNameHandler}
+            value={topicName}
           />
+          {/* <TextInput
+            style={styles.input}
+            multiline={true}
+            numberOfLines={4}
+            placeholder="Note"
+            onChangeText={changeNoteHandler}
+            value={note}
+          /> */}
+          {showSubmit === 0 ? (
+            <View>
+              <TouchableOpacity onPress={() => sendVid()} style={styles.addButton}>
+                <View style={styles.addViewButton}>
+                  <Text style={styles.addButtonText}>Add Lecture Video</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <TouchableOpacity onPress={() => sendCred_video_edit()} style={styles.addButton}>
+                <View style={styles.addViewButton}>
+                  <Text style={styles.addButtonText}>Edit Video</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-      </View>
+      )}
+    </View>
 
-      ):
-      (
-      <View style={styles.imageContainer}>
-        <Image 
-          source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg'}} 
-          style={styles.backgroundImage}>
-        </Image>
-        
-      </View>) 
-     }
-      
-      
-      <View style={styles.uploadContainer}>
-        <Text style={styles.uploadContainerTitle}>
-          Upload lecture video
-        </Text>
-        <TouchableOpacity onPress={selectPhotoTapped} style={styles.uploadButton}>
-          <Text style={styles.uploadButtonText}>
-            Upload
-          </Text>
-        </TouchableOpacity>
+    {/* content */}
+    <View style={styles.content}>
+      <View>
+        <FlatList
+          data={videos}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <View style={styles.viewButton}>
+                <TouchableOpacity
+                  style={styles.opacityButton}
+                  onPress={() => {
+                    navigation.navigate("VideoDetails", {
+                      userID: userID,
+                      userType: userType,
+                      _id: item._id,
+                      topicName: item.topicName,
+                    });
+                  }}
+                >
+                  <Text style={styles.buttonText}>{item.topicName}</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                {userType == "Teacher" ? (
+                  <View>
+                    <TouchableOpacity onPress={() => sendVid_video_edit_set(item._id, item.topicName, item.content)}>
+                      <View style={styles.deleteicon}>
+                        <MaterialIcons name="update" size={20} color="#0000A0" />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+              <View>
+                {userType == "Teacher" ? (
+                  <View>
+                    <TouchableOpacity onPress={() => sendVid_video_dlt(item._id)}>
+                      <View style={styles.deleteicon}>
+                        <MaterialIcons name="delete" size={20} color="#0000A0" />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
+    </View>
+  </View>
 
-    </View >
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    //works fine for showing video just after uploading it
     // <View>
-    //   <View>
-    //     {showPhoto ? (
-    //     <View>
-    //       <Text>
-    //         the url is : {photo}
-    //       </Text>
-    //       <Image source = {{uri:'https://pbs.twimg.com/profile_images/486929358120964097/gNLINY67_400x400.png'}}/>
-         
+    //   {showPhoto? (
 
+    //   <View style={styles.imageContainer}>
+    //      {/* <Image 
+    //       source={{ uri: photo }} 
+    //       style={styles.backgroundImage}>
+    //     </Image> */}
+    //     <Video 
+    //         ref={video} 
+    //         style={styles.backgroundVideo}
+    //         source={{uri: photo}}   // Can be a URL or a local file.
+    //         useNativeControls
+    //         resizeMode="contain"
+    //         isLooping
+    //         onPlaybackStatusUpdate={status => setStatus(() => status)}
+            
+    //     />
+    //     <View style={styles.buttons}>
+    //       <Button
+    //         title={status.isPlaying ? 'Pause' : 'Play'}
+    //         onPress={() =>
+    //           status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+    //         }
+    //       />
     //     </View>
-         
-    //     ): (<Text> photo not available </Text>)}
-        
     //   </View>
-    //   <View >
-    //      <Button title = "upload image" onPress= {()=> selectPhotoTapped()}
-    //      />
+
+    //   ):
+    //   (
+    //   <View style={styles.imageContainer}>
+    //     <Image 
+    //       source={{ uri: 'https://res.cloudinary.com/ogcodes/image/upload/v1581387688/m0e7y6s5zkktpceh2moq.jpg'}} 
+    //       style={styles.backgroundImage}>
+    //     </Image>
+        
+    //   </View>) 
+    //  }
+      
+      
+    //   <View style={styles.uploadContainer}>
+    //     <Text style={styles.uploadContainerTitle}>
+    //       Upload lecture video
+    //     </Text>
+    //     <TouchableOpacity onPress={selectPhotoTapped} style={styles.uploadButton}>
+    //       <Text style={styles.uploadButtonText}>
+    //         Upload
+    //       </Text>
+    //     </TouchableOpacity>
     //   </View>
 
     // </View >
+    
   );
 };
 
 const styles = StyleSheet.create({
+  fullhomescreen: {
+    flex: 1,
+    //alignItems: 'center',
+    //justifyContent: 'center',
+  },
+  addFrom: {
+    backgroundColor: "#E0FFFF",
+  },
+  addButton: {
+    // flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#add8e6",
+    borderRadius: 20,
+    marginRight: 110,
+    marginLeft: 110,
+    marginBottom: 20,
+    marginTop: 20,
+  },
+  addViewButton: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  addButtonText: {
+    fontSize: 18,
+    color: "#0000A0",
+    textAlign: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    margin: 10,
+    padding: 10,
+  },
+  input: {
+    marginTop: 20,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  content: {
+    backgroundColor: "white",
+    flex: 1,
+    flexDirection: "column",
+    //alignItems: "center",
+    //justifyContent: "center",
+    //margin: 15,
+  },
+  viewButton: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "center",
+    marginTop: 35,
+    marginBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 20,
+  },
+  opacityButton: {
+    flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#add8e6",
+    borderRadius: 20,
+    // padding: 10,
+  },
+  viewButton: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "center",
+    marginTop: 35,
+    marginBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 20,
+  },
+  opacityButton: {
+    flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#add8e6",
+    borderRadius: 20,
+    // padding: 10,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#0000A0",
+    textAlign: "left",
+    fontWeight: "bold",
+    paddingLeft: 20,
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+  item: {
+    paddingLeft: 10,
+    justifyContent: "space-between",
+    borderRadius: 1,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   imageContainer: {
     backgroundColor: '#ffffff',
     height: Dimensions.get('window').height
@@ -236,6 +569,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     bottom:0
+  },
+  content: {
+    backgroundColor: "white",
+    flex: 1,
+    flexDirection: "column",
+    //alignItems: "center",
+    //justifyContent: "center",
+    //margin: 15,
   },
   uploadContainer: {
     backgroundColor: '#f6f5f8',
@@ -275,7 +616,10 @@ const styles = StyleSheet.create({
     color: '#f6f5f8',
     fontSize: 18,
     fontFamily: 'Roboto'
-  }
+  },
+  deleteicon: {
+    paddingRight: 25,
+  },
 });
 export default VideoScreen;
 

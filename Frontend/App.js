@@ -27,6 +27,7 @@ import TeacherDetailsScreen from "./app/screens/TeacherDetailsScreen";
 import NoteScreen from "./app/screens/NoteScreen";
 // import NoteScreen from "./app/screens/temp_NoteScreen";
 import NoteDetailsScreen from "./app/screens/NoteDetailsScreen";
+import VideoDetailsScreen from "./app/screens/VideoDetailsScreen";
 import PdfScreen from "./app/screens/PdfScreen";
 import VideoScreen from "./app/screens/VideoScreen";
 import TeacherNotificationScreen from "./app/screens/TeacherNotificationScreen";
@@ -47,6 +48,7 @@ const HomeStack = createStackNavigator();
 const TeacherStack = createStackNavigator();
 const FrontStack = createStackNavigator();
 const NoteStack = createStackNavigator();
+const VideoStack = createStackNavigator();
 const ExerciseStack = createStackNavigator();
 const QuizStack = createStackNavigator();
 const CourseStack = createStackNavigator();
@@ -108,7 +110,7 @@ function ViewCourseContent({ route }) {
       />
       <TopTab.Screen
         name="Video"
-        component={VideoScreen}
+        component={VideoStackScreen}
         initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
       />
       <TopTab.Screen
@@ -147,6 +149,30 @@ function NoteStackScreen({ route }) {
     </NoteStack.Navigator>
   );
 }
+
+function VideoStackScreen({ route }) {
+  const { userID, userType, _id, chapterNo } = route.params;
+  return (
+    <VideoStack.Navigator>
+      <VideoStack.Screen
+        name="Allvideos"
+        component={VideoScreen}
+        options={{ title: "All Video Lectures" }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
+      />
+      <VideoStack.Screen
+        options={{ headerShown: false }}
+        name="VideoDetails"
+        component={VideoDetailsScreen}
+        options={{ title: "Video Details" }}
+        // initialParams={{ userID: 100, userType: "Teacher" }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
+      />
+    </VideoStack.Navigator>
+  );
+}
+
+
 
 function ExerciseStackScreen({ route }) {
   const { userID, userType, _id, chapterNo } = route.params;
