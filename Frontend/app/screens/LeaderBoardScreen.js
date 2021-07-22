@@ -51,20 +51,17 @@ export default function LeaderBoardScreen({ route, navigation }) {
                 <FlatList
                 data={scores}
                 renderItem={({ item }) => (
-                  <View style={{
-                    width: 75,
-                    height: 75,
-                    backgroundColor: yellow
-                    //flex:1,
-                    //flexDirection: 'row',
-                    //margin: 1
-                  }}>
+                  <View >
                     
-                      <Text style={styles.buttonText}>{item._id.studentName + "   "+item.count+"  " + item.obtainedMark+ "    " +item.totalMark+"   "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
-                    
+                      {/* <Text style={styles.rowText}>{item._id.studentName + "   "+item.count+"  " + item.obtainedMark+ "    " +item.totalMark+"   "+item.obtainedMark/item.totalMark*100+ "%"}</Text> */}
+                      <Text style={styles.rowText}>{item._id.studentName}</Text>
+                      <Text style={styles.rowText}>{item.count}</Text>
+                      <Text style={styles.rowText}>{item.obtainedMark}</Text>
+                      <Text style={styles.rowText}>{item.totalMark}</Text>
+                      <Text style={styles.rowText}>{item.obtainedMark/item.totalMark*100+ "%"}</Text>
                   </View>
                 )}
-                numColumns={5}
+                numColumns={1}
                 keyExtractor={(item, index) => index.toString()}
               />   
             </View>
@@ -122,5 +119,13 @@ export default function LeaderBoardScreen({ route, navigation }) {
       //   fontWeight: "bold",
         paddingLeft: 30,
       },
+      rowText:{
+        width: 75,
+        height: 75,
+        backgroundColor: 'red',
+        //flex:1,
+        flexDirection: 'row',
+        margin: 1
+      }
     });
     

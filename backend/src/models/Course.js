@@ -12,6 +12,10 @@ const CourseSchema = new mongoose.Schema({
         type:[{
             chapterName: String,
             chapterNo: Number,
+            topicList:[{
+                type: String,
+
+            }],
             notes:{
                 type:[{
                     noteId: Number,
