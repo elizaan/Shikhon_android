@@ -1,6 +1,7 @@
 const express = require("express");
 const auth = require("../middleware/auth");
 const Course = require("../models/Course");
+const Topic = require("../models/Topic");
 const router = express.Router();
 
 router.post("/course/add", async(req, res) => {
@@ -68,6 +69,9 @@ router.post("/course/chapter/add", async(req, res) => {
         });
     }
 });
+
+
+
 // http://localhost:5000/course/chapter/all?_id=60ad0cedb60e311790fef7c6
 // req params: _id
 router.get("/course/chapter/all", async(req, res) => {
@@ -94,6 +98,8 @@ router.get("/course/chapter/all", async(req, res) => {
         });
     }
 });
+
+
 
 // http://localhost:5000/course/chapter?_id=60ad0cedb60e311790fef7c6&chapterNo=2
 // req params: course id(_id), chapterNo(chapterNo)
@@ -155,5 +161,119 @@ router.delete("/course/chapter", async(req, res) => {
           })
 	}
 })
+
+
+
+
+// http://localhost:5000/course/chapter/topic/add
+// _id=60ad0cedb60e311790fef7c6
+//body: courseID, chapterNo, topicName
+router.post("/course/chapter/topic/add", async(req, res) => {
+    console.log(req.body);
+    try {
+        let topic;
+        topic = await Topic.findOne({ 'courseID': req.body.courseID , 'chapterNo': req.body.chapterNo })
+        if(topic){
+            console.log("found")
+            
+            const topicId = topic.topicList.length + 1
+            topic.topicList.push({
+                topicNo: topicId,
+                topicName: req.body.topicName
+            });  
+        }
+        else{
+            console.log("Not found")
+            topic = new Topic({
+                courseID: req.body.courseID,
+                chapterNo: req.body.chapterNo,
+                topicList: {
+                    topicNo: 1,
+                    topicName: req.body.topicName
+                }
+            });  
+        }
+        await topic.save();
+        res.status(200).json({
+            topic : topic
+        })
+	} catch (err) {
+        res.status(400).json({
+          error: 'something went wrong',
+          msg: err
+        })
+      }
+});
+
+// http://localhost:5000/course/chapter/topic/all?courseID=60ad0cedb60e311790fef7c6&chapterNo=2
+// req params: courseID, chapterNo
+router.get("/course/chapter/topic/all", async(req, res) => {
+    try {
+        
+        const topic = await Topic.findOne({ 'courseID': req.query.courseID , 'chapterNo': req.query.chapterNo })
+        //if(!topic) res.status(404).json({})
+        
+        res.status(200).json({
+            topicArr: topic
+        });
+    } catch (err) {
+        res.status(400).json({
+            error: "something went wrong",
+            msg: err,
+        });
+    }
+});
+// http://localhost:5000/course/chapter/topic?courseID=60ad0cedb60e311790fef7c6&chapterNo=2&_id=60f9659f23e9f348eca7cb47
+// param: courseID,chapterNo, _id
+router.delete("/course/chapter/topic", async(req, res) => {
+    try {
+		await Topic.updateOne({
+            'courseID': req.query.courseID ,
+            'chapterNo': req.query.chapterNo
+        }, {
+            $pull: {
+                topicList: {
+                   _id: req.query._id,
+                },
+            },
+        });
+        res.status(204).json({
+            success: true
+        })
+	} catch {
+		res.status(400).json({
+            error: 'something went wrong',
+            msg: err
+          })
+	}
+})
+
+// param: _id, body: content,topicName,imageContent
+// router.patch("/course/chapter/topic", async (req, res) => {
+// 	try {
+// 		await Topic.updateOne({
+//             'courseID': req.query.courseID ,
+//             'chapterNo': req.query.chapterNo,
+            
+//         }, {
+//             $set: {
+//                 topicList: {
+//                    _id: req.query._id,
+//                    topicNo: req.body.topicNo? req.body.topicNo: topicNo,
+//                    topicName: req.body.topicName? req.body.topicName: topicName
+//                 },
+//             },
+//         });
+    
+// 	    res.status(200).json({
+//             success: 'ok'
+//         })
+// 	} catch (err) {
+//         res.status(400).json({
+//           error: 'something went wrong',
+//           msg: err
+//         })
+//       }
+// })
 
 module.exports = router;
