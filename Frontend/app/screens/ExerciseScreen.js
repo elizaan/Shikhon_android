@@ -73,14 +73,31 @@ export default function ExerciseScreen({ route, navigation }) {
       setQuestions(data.quesArr);
     });
 
-  const sendCred_exercise_edit_set = async (item_id) => {
-    // console.log(item_topicName);
-    // console.log(item_content);
-
-    const tempFetchaddr3 = fetchAddress + "question";
-    const addr3 = `${tempFetchaddr3}?_id=${encodeURIComponent(item_id)}`;
-    
-  };
+    const sendCred_exercise_dlt = async (item_id) => {
+      // console.log("in exercise delete");
+      // sendCred_note_dlt_inexercise(item_id);
+      const tempFetchaddr2 = fetchAddress + "question/";
+      const addr2 = `${tempFetchaddr2}?_id=${encodeURIComponent(item_id)}`;
+  
+      fetch(addr2, {
+        method: "DELETE",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+      })
+        .then((res) => res.json())
+        .then(async (data) => {
+          try {
+            if (data.error) {
+              console.log("The customized error is:" + data.error);
+            }
+            await AsyncStorage.setItem("token", data.token);
+          } catch (e) {
+            console.log("The error is: ", e);
+          }
+          console.log(data);
+        });
+    };
 
   return (
     <View style={styles.fullhomescreen}>
@@ -239,7 +256,7 @@ export default function ExerciseScreen({ route, navigation }) {
                                       editAlternatives: item.alternatives,
                                       editSoln: item.shortSolution,
                                       editNote: item.noteID,
-                                      editMark: item.mark,
+                                      editMark: item.mark
                                     });
                                   }}
                                 >
