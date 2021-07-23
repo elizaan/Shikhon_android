@@ -18,6 +18,7 @@ import {
   PieChart,
   ProgressChart,
 } from "react-native-chart-kit";
+import { Dimensions } from "react-native";
 
 export default function ProfileScreen({ route, navigation }) {
   const { userID } = route.params;
@@ -25,8 +26,9 @@ export default function ProfileScreen({ route, navigation }) {
   const [topicName, setTopicName] = useState("");
   const [content, setContent] = useState("");
   const [scores, setScores] = useState("");
-  // const [data,setData] = useState("");
+  const [data,setData] = useState("");
 
+  const screenWidth = Dimensions.get("window").width;
   const param = { studentID: userID };
   const tempFetchaddr = fetchAddress + "score/history";
   const addr = `${tempFetchaddr}?studentID=${encodeURIComponent(param.studentID)}`;
@@ -46,6 +48,7 @@ export default function ProfileScreen({ route, navigation }) {
       // setData({labels: scores.quizName, datsets:{
       //   data: scores.obtainedMark
       // }})
+      // setData({labels:[1,2,3,4],datsets:[{data:[10,20,13,23]}]})
     });
 
     return (
@@ -84,7 +87,25 @@ export default function ProfileScreen({ route, navigation }) {
               data={data}
               width={screenWidth}
               height={220}
-              chartConfig={chartConfig}
+              yAxisLabel="$"
+              yAxisSuffix="k"
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726"
+                }
+              }}
             />
           </View> */}
         </View>
