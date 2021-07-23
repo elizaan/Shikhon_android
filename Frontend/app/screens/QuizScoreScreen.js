@@ -29,7 +29,7 @@ export default function QuizScoreScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>User ID: {userID}</Text>
+        {/* <Text style={styles.headerText}>User ID: {userID}</Text> */}
         <Text style={styles.headerText}>
           You scored {score} out of {questions.length}
         </Text>
@@ -106,9 +106,20 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
   },
   header: {
-    backgroundColor: "#add8e6",
-    //marginBottom: 15,
-    padding: 30,
+    //color: "rgb(150,150,150)",
+    marginBottom: 15,
+    marginTop: 15,
+    marginLeft: 20,
+    marginRight: 20,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+    elevation: 10,
     // marginBottom: 20,
   },
   headerText: {
@@ -199,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     marginTop: 35,
-    marginBottom: 20,
+    //marginBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
   },

@@ -85,7 +85,7 @@ export default function CourseDetailScreen({ route, navigation }) {
   return (
     <View style={styles.fullhomescreen}>
       {/* header */}
-      <View style={styles.header}>
+      <View >
         {/* <Text style={styles.headerText}>User ID: {userID}</Text> */}
         {/* <Text style={styles.headerText}>{userType}</Text> */}
         <Text style={styles.headerText}>Chapters</Text>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: "center",
     fontWeight: "bold",
-    color: "#0000A0",
+    color:  "rgb(100,100,100)",
   },
   addFrom: {
     backgroundColor: "#E0FFFF",
@@ -224,8 +224,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     justifyContent: "center",
-    marginTop: 35,
-    marginBottom: 20,
+    marginTop: 5,
+    //marginBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
   },
@@ -234,14 +234,23 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     backgroundColor: "#add8e6",
-    borderRadius: 20,
-    //padding: 10,
+    borderRadius: 8,
+    padding: 20,
+    margin: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+    elevation: 10,
   },
   buttonText: {
     fontSize: 18,
-    color: "#0000A0",
+    color: "rgb(100,100,100)",
     textAlign: "left",
     fontWeight: "bold",
-    paddingLeft: 30,
+    paddingLeft: 10,
   },
 });
