@@ -13,6 +13,8 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import fetchAddress from "../IP_File";
 import { MaterialIcons } from "@expo/vector-icons";
+import { utils } from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
 
 
 const PdfScreen = ({route, navigation }) => {
@@ -22,6 +24,7 @@ const PdfScreen = ({route, navigation }) => {
   const [topicName, setTopicName] = useState("");
 
   const [showSubmit, setShowSubmit] = useState(0);
+  const reference = storage().ref('black-t-shirt-sm.png');
   
  
   const changeNoteHandler = (val) => {
@@ -68,19 +71,23 @@ const checkTopicInput = async () => {
     data.append('file', photo)
     data.append('upload_preset', 'shikhon')
     data.append("cloud_name", "elixa")
-    fetch("https://api.cloudinary.com/v1_1/elixa/upload", {
+    const response = await fetch("https://api.cloudinary.com/v1_1/elixa/raw/upload", {
       method: "post",
       body: data
     }).then(res => res.json()).
       then(data => {
         console.log(data.secure_url);
         setPdf(data.secure_url);
+        return data.secure_url;
         
         // console.log(photo);
         
       }).catch(err => {
         Alert.alert("An Error Occured While Uploading")
       })
+
+
+      return response;
 
     
   }
@@ -107,7 +114,12 @@ const checkTopicInput = async () => {
           name,
       }
       console.log(source);
-      cloudinaryUpload(source);
+      await Firebase.initializeApp();
+      const pathToFile = `${utils.FilePath.PICTURES_DIRECTORY}/${source}`;
+          // uploads file
+      const pdfurl =  await reference.putFile(pathToFile);
+     // const pdfurl = await cloudinaryUpload(source);
+      return pdfurl;
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
@@ -115,6 +127,8 @@ const checkTopicInput = async () => {
         throw err;
       }
     }
+
+     
   }
     const sendPdf = async () => {
       // console.log("in sendCred");
@@ -127,8 +141,9 @@ const checkTopicInput = async () => {
         
         
       const addr = fetchAddress + "pdf/add";
-      await selectPdfTapped();
-      fetch(addr, {
+      const pdfurl= await selectPdfTapped();
+      console.log(pdfurl);
+      await fetch(addr, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +153,7 @@ const checkTopicInput = async () => {
           courseID: _id,
           chapterNo: chapterNo,
           author: userID,
-          content: pdf,
+          content: pdfurl,
         }),
       })
         .then((res) => res.json())
@@ -153,7 +168,10 @@ const checkTopicInput = async () => {
           }
           console.log(data);
         });
-      s
+
+        setTopicName("");
+        // setNote("");
+      
       }
     };
 
