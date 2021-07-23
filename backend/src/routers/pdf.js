@@ -17,7 +17,9 @@ router.post('/pdf/add', async(req, res) => {
                 author: req.body.author ? req.body.author : "Unknown",
                 content: req.body.content
             })
+            console.log(req.body);
             await pdf.save();
+
         } catch (err) {
             res.status(400).json({
                 error: 'something went wrong',

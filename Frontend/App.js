@@ -55,6 +55,17 @@ const ExerciseStack = createStackNavigator();
 const QuizStack = createStackNavigator();
 const CourseStack = createStackNavigator();
 
+// var firebaseConfig = {
+//       apiKey: "AIzaSyA5j2M0POMGo95rgoQlBOr5Y0emiTaO2R8",
+//       authDomain: "project-id.firebaseapp.com",
+//       databaseURL: "https://project-id.firebaseio.com",
+//       projectId: "project-id",
+//       storageBucket: "project-id.appspot.com",
+//       messagingSenderId: "sender-id",
+//       appId: "app-id",
+//       measurementId: "G-measurement-id",
+//     };
+
 const TopTab = createMaterialTopTabNavigator();
 var noti, noti1, noti2;
 var count = 0;
@@ -487,6 +498,7 @@ function App() {
   // NotiBadge = withBadge(count)(Icon);
 
   return (
+    
     <NavigationContainer>
       <FrontStack.Navigator screenOptions={{ headerShown: false }}>
         <FrontStack.Screen name="Shikhon" component={FrontStackScreen} />
