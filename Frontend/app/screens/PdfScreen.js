@@ -13,8 +13,6 @@ import {
 import DocumentPicker from 'react-native-document-picker';
 import fetchAddress from "../IP_File";
 import { MaterialIcons } from "@expo/vector-icons";
-import { utils } from '@react-native-firebase/app';
-import storage from '@react-native-firebase/storage';
 
 
 const PdfScreen = ({route, navigation }) => {
@@ -24,8 +22,6 @@ const PdfScreen = ({route, navigation }) => {
   const [topicName, setTopicName] = useState("");
 
   const [showSubmit, setShowSubmit] = useState(0);
-  const reference = storage().ref('black-t-shirt-sm.png');
-  
  
   const changeNoteHandler = (val) => {
     setPdf(val);
@@ -114,11 +110,8 @@ const checkTopicInput = async () => {
           name,
       }
       console.log(source);
-      await Firebase.initializeApp();
-      const pathToFile = `${utils.FilePath.PICTURES_DIRECTORY}/${source}`;
-          // uploads file
-      const pdfurl =  await reference.putFile(pathToFile);
-     // const pdfurl = await cloudinaryUpload(source);
+      
+      const pdfurl = await cloudinaryUpload(source);
       return pdfurl;
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
