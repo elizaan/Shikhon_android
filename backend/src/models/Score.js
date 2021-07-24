@@ -1,45 +1,45 @@
 const mongoose = require('mongoose')
 
 const ScoreSchema = new mongoose.Schema({
-    studentID:{
+    studentID: {
         type: String,
         required: true,
     },
-    studentName:{
+    studentName: {
         type: String,
         required: true,
     },
-    quizName:{
+    quizName: {
+        type: String,
+
+    },
+    quizID: {
         type: String,
         required: true,
     },
-    quizID:{
+    courseName: {
         type: String,
         required: true,
     },
-    courseName:{
-        type: String,
-        required: true,
-    },
-    updateDate:{
+    updateDate: {
         type: Date,
         default: Date.now()
     },
-    totalMark:{
+    totalMark: {
         type: Number,
         required: true,
     },
-    obtainedMark:{
+    obtainedMark: {
         type: Number,
         required: true,
     },
-    Section:{
+    Section: {
         type: String,
     },
-    chapterNo:{
+    chapterNo: {
         type: Number,
     }
-    
+
 })
 
 const Score = mongoose.model('Score', ScoreSchema)

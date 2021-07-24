@@ -19,6 +19,8 @@ export default function CourseDetailScreen({ route, navigation }) {
 
   const [chapters, setChapters] = useState("");
 
+  
+
   const changeChapterNoHandler = (val) => {
     setChapterNo(val);
   };
@@ -139,6 +141,7 @@ export default function CourseDetailScreen({ route, navigation }) {
                       chapterNo: item.chapterNo,
                       trackID: trackID,
                       trackName: trackName,
+                      courseName: courseName
                     });
                   }}
                 >
