@@ -65,14 +65,14 @@ export default function LeaderBoardScreen({ route, navigation }) {
               </View>
             </View>
           
-          
+         
             <View>
                 <FlatList
                 data={scores}
                 renderItem={({ item }) => (
                   <View >
                     <TouchableOpacity style={styles.opacityButton}>
-                      <Text style={styles.buttonText}>{item._id.studentName + "   "+item.count+"  " + item.obtainedMark+ "/" +item.totalMark+"   "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
+                      <Text style={styles.buttonText}>{item._id.studentName + "    "+item.count+"     " + item.obtainedMark+ " out of " +item.totalMark+"       "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
                       {/* <Text style={styles.rowText}>{item._id.studentName}</Text>
                       <Text style={styles.rowText}>{item.count}</Text>
                       <Text style={styles.rowText}>{item.obtainedMark}</Text>
@@ -138,13 +138,13 @@ export default function LeaderBoardScreen({ route, navigation }) {
         borderRadius: 20,
         //padding: 10,
       },
-      buttonText: {
-        fontSize: 18,
-        color: "#0300A0",
-        textAlign: "left",
-      //   fontWeight: "bold",
-        paddingLeft: 30,
-      },
+      // buttonText: {
+      //   fontSize: 18,
+      //   color: "#0300A0",
+      //   textAlign: "left",
+      // //   fontWeight: "bold",
+      //   paddingLeft: 30,
+      // },
       rowText:{
         width: 75,
         height: 75,
@@ -163,7 +163,8 @@ export default function LeaderBoardScreen({ route, navigation }) {
       },
       container: {
         paddingTop: 10,
-        flex: 1, 
+        paddingBottom: 10,
+        //flex: 1, 
         flexDirection: 'row', 
         justifyContent: 'space-evenly',  
       },
@@ -215,12 +216,12 @@ export default function LeaderBoardScreen({ route, navigation }) {
         justifyContent: "center",
         backgroundColor: "#add8e6",
         borderRadius: 10,
-        padding: 10,
-        margin: 5,
+        padding: 8,
+        margin: 3,
         
       },
       buttonText: {
-        fontSize: 20,
+        fontSize: 18,
         color: "#0000A0",
         textAlign: "right",
         //alignSelf: 'flex-end',

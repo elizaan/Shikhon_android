@@ -110,7 +110,10 @@ function ViewCourseContent({ route }) {
   console.log("_id printing in viewCourseContent", userID, userType, _id, chapterNo, trackID, trackName);
   return (
     //<NavigationContainer>
-    <TopTab.Navigator screenOptions={{ headerShown: false }}>
+    <TopTab.Navigator 
+      screenOptions={{ headerShown: false }}
+      
+    >
       <TopTab.Screen
         name="Note"
         component={NoteStackScreen}
@@ -127,7 +130,7 @@ function ViewCourseContent({ route }) {
         initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
       />
       <TopTab.Screen
-        name="Exercise"
+        name="Exrcise"
         component={ExerciseStackScreen}
         initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo }}
       />
@@ -362,7 +365,9 @@ function NotificationStackScreen({ route }) {
 
 function NaviationafterFront({ route }) {
   const { userID, userType } = route.params;
-
+  console.log("##########From NavigationAfterFront,354   ");
+  console.log(userID);
+  console.log(userType);
   // console.log("_id printing in NaviationafterFront", userID, userType);
   return (
     //<NavigationContainer>
@@ -424,6 +429,7 @@ function NaviationafterFront({ route }) {
         options={{
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />,
         }}
+        initialParams={{ userID: userID, userType: userType }}
       />
     </Tab.Navigator>
     //</NavigationContainer>

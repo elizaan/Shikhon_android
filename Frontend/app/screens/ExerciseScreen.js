@@ -103,7 +103,7 @@ export default function ExerciseScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Practice Problem</Text>
+        <Text style={styles.headerText}>Question:</Text>
       </View>
 
       {/*form of add note*/}
@@ -138,6 +138,7 @@ export default function ExerciseScreen({ route, navigation }) {
             {questions.length === 0 ? null : (
               <View>
                 <View>
+                
                   <Text style={styles.questionText}>{questions[currentQuestion].description}</Text>
                   <FlatList
                     data={questions[currentQuestion].alternatives}
@@ -170,7 +171,7 @@ export default function ExerciseScreen({ route, navigation }) {
                         <View>
                           <TouchableOpacity style={styles.answerButton}>
                             {item.isCorrect ? (
-                              <Text style={styles.questionText}>{"Correct answer: " + item.text}</Text>
+                              <Text style={styles.answerText}>{"Correct ans: " + item.text}</Text>
                             ) : null}
                           </TouchableOpacity>
                         </View>
@@ -194,9 +195,9 @@ export default function ExerciseScreen({ route, navigation }) {
                 </View>
                 {showSoln ? (
                   <View>
-                    <TouchableOpacity style={styles.answerButton}>
+                    <TouchableOpacity style={styles.answerButton2}>
                       {questions[currentQuestion].shortSolution ? (
-                        <Text style={styles.questionText}>
+                        <Text style={styles.answerText2}>
                           {"Solution: " + questions[currentQuestion].shortSolution}
                         </Text>
                       ) : null}
@@ -216,9 +217,9 @@ export default function ExerciseScreen({ route, navigation }) {
                 </View>
                 {showNote ? (
                   <View>
-                    <TouchableOpacity style={styles.answerButton}>
+                    <TouchableOpacity style={styles.answerButton2}>
                       {questions[currentQuestion].noteID ? (
-                        <Text style={styles.questionText}>{"Note: " + questions[currentQuestion].noteID}</Text>
+                        <Text style={styles.answerText2}>{"Note: " + questions[currentQuestion].noteID}</Text>
                       ) : null}
                     </TouchableOpacity>
                   </View>
@@ -351,16 +352,16 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
   },
   header: {
-    backgroundColor: "#add8e6",
+    //backgroundColor: "#add8e6",
     //marginBottom: 15,
-    padding: 20,
-    marginBottom: 20,
+    padding: 10,
+    marginBottom: 8,
   },
   headerText: {
-    fontSize: 25,
-    textAlign: "center",
+    fontSize: 20,
+    textAlign: "left",
     fontWeight: "bold",
-    color: "#0000A0",
+    color: "#000000",
   },
   addFrom: {
     backgroundColor: "#E0FFFF",
@@ -459,6 +460,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     fontWeight: "bold",
     paddingLeft: 30,
+    paddingBottom: 20,
   },
   answerButton: {
     // flex: 1,
@@ -467,9 +469,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#add8e6",
     borderRadius: 20,
     paddingRight: 80,
-    marginRight: 140,
+    marginRight: 100,
     marginLeft: 50,
     marginBottom: 10,
+  },
+  answerButton2: {
+    // flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#add8e6",
+    borderRadius: 5,
+    // paddingRight: 10,
+    padding: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  answerText2: {
+    fontSize: 18,
+    color: "black",
+    textAlign: "left",
+    // fontWeight: "bold",
+    paddingLeft: 20,
+    // marginBottom: 10,
   },
   answerText: {
     fontSize: 18,

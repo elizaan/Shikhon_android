@@ -166,7 +166,7 @@ export default function AddQuizScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>User ID: {userID}</Text>
+        {/* <Text style={styles.headerText}>User ID: {userID}</Text> */}
         {userType == "Student" && questions.length != 0 ? <Text style={styles.headerText}>{restime}</Text> : null }
         {/* <Text>hello!</Text> */}
       </View>
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     marginTop: 35,
-    marginBottom: 20,
+    //marginBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
   },

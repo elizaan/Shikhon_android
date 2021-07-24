@@ -6,6 +6,7 @@ import fetchAddress from "../IP_File";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screen from "../components/Screen";
 import { AppForm, AppFormField, SubmitButton } from "../components/forms";
+import jwt_decode from 'jwt-decode';
 
 import FronScreen from "./FrontScreen";
 import FrontScreen from "./FrontScreen";
@@ -25,6 +26,7 @@ export default function LoginScreen({ route, navigation }) {
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
   const [err, setError] = useState(null);
+  const [user_id,setUser_id] = useState("");
 
   // if(userType != "Teacher") setCode("");
 
@@ -55,6 +57,11 @@ export default function LoginScreen({ route, navigation }) {
           // await AsyncStorage.setItem("status", status);
           // console.log(await AsyncStorage.getItem("status"))
           console.log(data);
+          console.log("------------------ ",data.token);
+          var decoded = jwt_decode(data.token);
+          console.log("found......",decoded,"-------");
+          console.log("found......",decoded.userId,"-------");
+          //setUser_id(decoded.userId);
           if(data.error){
             console.log("The customized error is:" + data.error);
             setError(data.error);
@@ -82,9 +89,9 @@ export default function LoginScreen({ route, navigation }) {
           // await AsyncStorage.setItem("staus", data.status);
           console.log(await AsyncStorage.getItem("token"));
           // <Text>${await AsyncStorage.getItem("staus")};</Text>
-          
+          //console.log(".........",user_id);
             //console.log("login->register with opacity");
-          navigation.navigate("Naviation_after_Front", { userID: userID, userType: userType });
+          navigation.navigate("Naviation_after_Front", { userID: decoded.userId, userType: userType });
           
           // props.navigation.replace("home")
         } catch (error) {
