@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -48,7 +48,8 @@ const VideoScreen = ({route, navigation }) => {
 
   const { userID, userType, _id, chapterNo } = route.params;
   // console.log("_id printing in NoteScreen",userID,userType,_id,chapterNo)
-  const param = { courseID: _id, chapterNo: chapterNo };
+  const getVideos = async()=>{
+    const param = { courseID: _id, chapterNo: chapterNo };
 
   const tempFetchaddr = fetchAddress + "video/all";
 
@@ -70,6 +71,18 @@ const VideoScreen = ({route, navigation }) => {
       // console.log(data.noteArr);
       setVideos(data.videoArr);
     });
+  }
+
+  useEffect(async() => {
+        await getVideos();
+    
+          
+    
+    
+        // console.log(items);
+      }, [getVideos]);
+
+
 
 
   const cloudinaryUpload = async (photo) => {

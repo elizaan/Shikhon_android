@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ScrollView, View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 
 export default function QuizScoreScreen({ route, navigation }) {
-  const { userID, userType, _id, chapterNo, questions, chosenText, score, trackID, trackName } = route.params;
+  const { userID, userType, _id, chapterNo, questions, chosenText, score, trackID, trackName, courseName } = route.params;
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
@@ -29,10 +29,10 @@ export default function QuizScoreScreen({ route, navigation }) {
     <View style={styles.fullhomescreen}>
       {/* header */}
       <View style={styles.header}>
-        {/* <Text style={styles.headerText}>User ID: {userID}</Text> */}
-        <Text style={styles.headerText}>
+        <Text style={styles.headerText}>User ID: {userID}</Text>
+        {/* <Text style={styles.headerText}>
           You scored {score} out of {questions.length}
-        </Text>
+        </Text> */}
         {/* <Text>hello!</Text> */}
       </View>
 

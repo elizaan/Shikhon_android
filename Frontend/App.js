@@ -106,8 +106,8 @@ console.log("haha");
 
 
 function ViewCourseContent({ route }) {
-  const { userID, userType, _id, chapterNo, trackID, trackName} = route.params;
-  console.log("_id printing in viewCourseContent", userID, userType, _id, chapterNo, trackID, trackName);
+  const { userID, userType, _id, chapterNo, trackID, trackName, courseName} = route.params;
+  console.log("_id printing in viewCourseContent", userID, userType, _id, chapterNo, trackID, trackName, courseName);
   return (
     //<NavigationContainer>
     <TopTab.Navigator 
@@ -117,7 +117,7 @@ function ViewCourseContent({ route }) {
       <TopTab.Screen
         name="Note"
         component={NoteStackScreen}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName}}
       />
       <TopTab.Screen
         name="Pdf"
@@ -137,7 +137,7 @@ function ViewCourseContent({ route }) {
       <TopTab.Screen
         name="Quiz"
         component={QuizStackScreen}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName}}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName}}
       />
     </TopTab.Navigator>
     //</NavigationContainer>
@@ -244,20 +244,21 @@ function ExerciseStackScreen({ route }) {
 }
 
 function QuizStackScreen({ route }) {
-  const { userID, userType, _id, chapterNo, trackID, trackName} = route.params;
+  const { userID, userType, _id, chapterNo, trackID, trackName, courseName} = route.params;
+  console.log("found in uizstack" + courseName)
   return (
     <QuizStack.Navigator>
       <QuizStack.Screen
         name="AllQuizes"
         component={QuizScreen}
         options={{ title: "All Quizes" }}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID:trackID, trackName: trackName}}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID:trackID, trackName: trackName, courseName: courseName}}
       />
       <QuizStack.Screen
         name="QuizDetails"
         component={QuizDetailsScreen}
         options={{ title: "Quiz Details" }}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName}}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName}}
       />
       <QuizStack.Screen
         options={{ headerShown: false }}
@@ -265,7 +266,7 @@ function QuizStackScreen({ route }) {
         component={AddQuizScreen}
         options={{ title: "Add Quiz" }}
         // initialParams={{ userID: 100, userType: "Teacher" }}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName}}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName}}
       />
       <QuizStack.Screen
         options={{ headerShown: false }}
@@ -273,7 +274,7 @@ function QuizStackScreen({ route }) {
         component={AddQuizDetailsScreen}
         options={{ title: "Add Quiz Details" }}
         // initialParams={{ userID: 100, userType: "Teacher" }}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName}}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName}}
       />
       <QuizStack.Screen
         options={{ headerShown: false }}
@@ -281,7 +282,7 @@ function QuizStackScreen({ route }) {
         component={QuizScoreScreen}
         options={{ title: "Quiz Score" }}
         // initialParams={{ userID: 100, userType: "Teacher" }}
-        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName }}
+        initialParams={{ userID: userID, userType: userType, _id: _id, chapterNo: chapterNo, trackID: trackID, trackName: trackName, courseName: courseName }}
       />
     </QuizStack.Navigator>
   );

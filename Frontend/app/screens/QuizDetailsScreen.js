@@ -3,20 +3,22 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ScrollView, View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import fetchAddress from "../IP_File";
 
-export default function AddQuizScreen({ route, navigation }) {
-  const { userID, userType, _id, chapterNo, trackID, trackName} = route.params;
+export default function QuizDetailsScreen({ route, navigation }) {
+  const { userID, userType, _id, chapterNo, trackID, trackName, quizName, courseName} = route.params;
+ 
   // console.log("in screen2" + trackName);
 
   const [questions, setQuestions] = useState("");
 
   const [currentQuestion, setCurrentQuestion] = useState(-1);
   const [showScore, setShowScore] = useState(false);
+  const [showButton, setButton] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [uploadMark, setUploadMark] = useState(false);
   const [countSeconds, setCountSeconds] = useState(false);
   const [score, setScore] = useState(0);
+  const [hscore, setHscore] = useState(0);
   const [time, setTime] = useState(10);
-  // const [hours, setHours] = useState(0);
-  // const [minutes, setMinutes] = useState(0);
-  // const [seconds, setSeconds] = useState(0);
   const [restime, setRestime] = useState(null);
   const [chosenText, setChosenText] = useState([]);
   const [totalMark, setTotalMark] = useState(0);
@@ -40,14 +42,39 @@ export default function AddQuizScreen({ route, navigation }) {
       // console.log("here");
       setQuestions(data.quiz.questions);
     });
-
   // console.log(questions);
   const showQuestions_console = () => {
     console.log(questions[0]);
   };
 
+  const getHighScore = async() => {
+
+    const tempFetchaddr2 = fetchAddress + "score/highest";
+
+    const addr2 = `${tempFetchaddr2}?quizID=${encodeURIComponent(param._id)}`;
+    // const addr = 'http://192.168.0.104:5000/note/all?courseID=60ad0cedb60e311790fef7c6&chapterNo=2'
+    await fetch(addr2)
+      .then((res) => res.json())
+  
+      .then(async (data) => {
+        try {
+          setHscore(data.highest);
+          // await AsyncStorage.getItem("token", data._id);
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        //   console.log(data.quiz);
+        // console.log("here..........");
+        // console.log(data);
+        
+      });
+
+
+
+  };
+
   // var totalMark = 0;
-  const get_totalMark = () => {
+  const get_totalMark = async() => {
     var countMark = 0;
     for(let i=0; i<questions.length; i++)
     {
@@ -59,7 +86,47 @@ export default function AddQuizScreen({ route, navigation }) {
     // console.log("total Mark: " + totalMark);
   };
 
-  const handleAnswerOptionClick = (isCorrect, mark) => {
+  const sendScore = async () => {
+    // console.log("in sendCred");
+    const addr = fetchAddress + "score/add";
+    await fetch(addr, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        studentID: userID,
+        quizName: quizName,
+        quizID: _id,
+        courseName: courseName,
+        chapterNo: chapterNo,
+        obtainedMark: score,
+        totalMark: totalMark,
+        section: trackName,
+        
+        
+        
+        
+        
+      }),
+    })
+      .then((res) => res.json())
+      .then(async (data) => {
+        try {
+          if (data.error) {
+            console.log("The customized error is:" + data.error);
+          }
+          
+        } catch (e) {
+          console.log("The error is: ", e);
+        }
+        // console.log(data);
+      });
+    setTopicName("");
+    setNote("");
+  };
+
+  const handleAnswerOptionClick = async(isCorrect, mark) => {
     // console.log(mark);
     if (isCorrect) {
       setScore(score + mark);
@@ -68,16 +135,26 @@ export default function AddQuizScreen({ route, navigation }) {
     if(currentQuestion == 0)
     {
       get_totalMark();
+      
+      
       // console.log("total Mark: " + totalMark);
     }
-
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
       setShowScore(true);
+      
     }
   };
+
+  const showResult = async(isCorrect, mark) => {
+    await handleAnswerOptionClick(isCorrect, mark);
+    
+
+  }
+
+  
 
   useEffect(() => {
     if(questions.length != 0)
@@ -90,6 +167,7 @@ export default function AddQuizScreen({ route, navigation }) {
         setTimeout(() => setTime(time - 1), 1000);
       } else {
         setShowScore(true);
+        
         // setTime("BOOOOM!");
       }
       var date = new Date(null);
@@ -98,6 +176,12 @@ export default function AddQuizScreen({ route, navigation }) {
       setRestime(result);
     }
   });
+
+  // if(uploadMark) {
+  //   sendScore();
+  //   getHighScore();
+  //   setUploadMark(false);
+  // }
 
   const sendCred_quiz_ques_add = async () => {
     // console.log("in sendCred for adding exercise");
@@ -220,9 +304,49 @@ export default function AddQuizScreen({ route, navigation }) {
         <View style={styles.content}>
           <View>
             {showScore ? (
-              <Text style={styles.headerText}>
-                {/* You scored {score} out of {questions.length} */}
-                You scored {score} out of {totalMark}
+             <View>
+               {!uploadMark? (
+                 <View>
+                   <TouchableOpacity
+                      onPress={async() => {
+                                // console.log(item);
+                                sendScore();
+                                await getHighScore();
+                                setUploadMark(true);
+                                setButton(true);
+                                setLoaded(true);
+                      }}
+                      style={styles.addButton}
+                    >
+                    <Text style={styles.addButtonText}>View Score</Text>
+                  </TouchableOpacity>
+                 </View>
+               ): (
+                 <View>
+                   {loaded? (
+                     <View>
+                     <Text style={styles.headerText}>
+                         You scored {score} out of {totalMark} {'\n'}
+                         Highscore: {hscore}
+             
+                     </Text>
+                   </View>
+                   ):(
+                     <View>
+                     <Text>
+                      Loading....
+                     </Text>
+                     </View>
+                   )
+                   }
+                 </View>
+                 
+                
+               )}
+
+                  
+                
+
                 <View>
                   <TouchableOpacity
                     onPress={() => {
@@ -241,12 +365,13 @@ export default function AddQuizScreen({ route, navigation }) {
                     }}
                     style={styles.addButton}
                   >
-                    <View style={styles.seeAnswerButton}>
+                    {/* <View style={styles.seeAnswerButton}> */}
                       <Text style={styles.addButtonText}>See Answers</Text>
-                    </View>
+                    {/* </View> */}
                   </TouchableOpacity>
                 </View>
-              </Text>
+             </View>
+              
             ) : (
               <View>
                 {questions.length === 0 ? null : (
@@ -263,7 +388,7 @@ export default function AddQuizScreen({ route, navigation }) {
                               onPress={() => {
                                 // console.log(item);
                                 setChosenText([...chosenText, item.text]);
-                                handleAnswerOptionClick(item.isCorrect, questions[currentQuestion].mark);
+                                showResult(item.isCorrect, questions[currentQuestion].mark);
                               }}
                               style={styles.answerButton}
                             >
@@ -440,6 +565,19 @@ const styles = StyleSheet.create({
     marginRight: 140,
     marginLeft: 50,
     marginBottom: 10,
+  },
+  viewScoreButton: {
+    // flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    backgroundColor: "#add8e6",
+    borderRadius: 20,
+    padding:20,
+    paddingTop: 20,
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft:80,
+    marginRight:80,
   },
   answerText: {
     fontSize: 18,

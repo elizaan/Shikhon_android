@@ -17,7 +17,8 @@ export default function PdfDetailsScreen({ route, navigation }) {
 
   const { userID, userType, _id, chapterNo } = route.params;
 //   console.log("_id printing in NoteDetailsScreen",userID,userType,_id,chapterNo)
-  const param = { _id: _id };
+  const getPdf =async() => {
+    const param = { _id: _id };
 
   const tempFetchaddr = fetchAddress + "pdf/";
   
@@ -36,6 +37,13 @@ export default function PdfDetailsScreen({ route, navigation }) {
       setContent(data.pdf.content)
       console.log(data);
     });
+  }
+
+  useEffect(async() => {
+    await getPdf();
+
+    
+  }, [getPdf]);
 
     return (
       <View style={styles.fullhomescreen}>

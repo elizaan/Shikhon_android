@@ -72,7 +72,7 @@ export default function LeaderBoardScreen({ route, navigation }) {
                 renderItem={({ item }) => (
                   <View >
                     <TouchableOpacity style={styles.opacityButton}>
-                      <Text style={styles.buttonText}>{item._id.studentName + "    "+item.count+"     " + item.obtainedMark+ " out of " +item.totalMark+"       "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
+                      <Text style={styles.buttonText}>{item._id.studentName + "      "+item.count+"     " + item.obtainedMark+ " out of " +item.totalMark+"       "+item.obtainedMark/item.totalMark*100+ "%"}</Text>
                       {/* <Text style={styles.rowText}>{item._id.studentName}</Text>
                       <Text style={styles.rowText}>{item.count}</Text>
                       <Text style={styles.rowText}>{item.obtainedMark}</Text>

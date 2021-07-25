@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import fetchAddress from "../IP_File";
 import { MaterialIcons } from "@expo/vector-icons";
 
 
+
 const PdfScreen = ({route, navigation }) => {
 
   const [pdfs, setPdfs] = useState("");
@@ -22,6 +23,7 @@ const PdfScreen = ({route, navigation }) => {
   const [topicName, setTopicName] = useState("");
 
   const [showSubmit, setShowSubmit] = useState(0);
+
  
   const changeNoteHandler = (val) => {
     setPdf(val);
@@ -39,9 +41,10 @@ const checkTopicInput = async () => {
     }
   };
 
-  const { userID, userType, _id, chapterNo } = route.params;
+  const { userID, userType, _id, chapterNo, courseName } = route.params;
   // console.log("_id printing in NoteScreen",userID,userType,_id,chapterNo)
-  const param = { courseID: _id, chapterNo: chapterNo };
+  const getPdfs = async () => {
+    const param = { courseID: _id, chapterNo: chapterNo };
 
   const tempFetchaddr = fetchAddress + "pdf/all";
 
@@ -60,6 +63,13 @@ const checkTopicInput = async () => {
       }
       setPdfs(data.pdfArr);
     });
+  }
+
+  useEffect(async() => {
+    await getPdfs();
+
+    
+  }, [getPdfs]);
 
 
   const cloudinaryUpload = async (photo) => {
@@ -112,6 +122,7 @@ const checkTopicInput = async () => {
       console.log(source);
       
       const pdfurl = await cloudinaryUpload(source);
+
       return pdfurl;
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
