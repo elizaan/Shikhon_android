@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -43,7 +43,8 @@ const checkTopicInput = async () => {
 
   const { userID, userType, _id, chapterNo, courseName } = route.params;
   // console.log("_id printing in NoteScreen",userID,userType,_id,chapterNo)
-  const param = { courseID: _id, chapterNo: chapterNo };
+  const getPdfs = async () => {
+    const param = { courseID: _id, chapterNo: chapterNo };
 
   const tempFetchaddr = fetchAddress + "pdf/all";
 
@@ -62,6 +63,13 @@ const checkTopicInput = async () => {
       }
       setPdfs(data.pdfArr);
     });
+  }
+
+  useEffect(async() => {
+    await getPdfs();
+
+    
+  }, [getPdfs]);
 
 
   const cloudinaryUpload = async (photo) => {
