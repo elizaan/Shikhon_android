@@ -5,7 +5,7 @@ import fetchAddress from "../IP_File";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export default function QuizScreen({ route, navigation }) {
-  const { userID, userType, _id, chapterNo, trackID, trackName, courseName } = route.params;
+  const { userID, userType, _id, chapterNo, trackID, trackName } = route.params;
   // console.log("in screen1"+trackName);
   //   console.log(userType);
 
@@ -114,7 +114,6 @@ export default function QuizScreen({ route, navigation }) {
                     trackName: trackName,
                     quizName: quizName,
                     questions: [],
-                    courseName: courseName,
                   });
                   setQuizName("");
                 }}
@@ -148,9 +147,6 @@ export default function QuizScreen({ route, navigation }) {
                           topicName: item.topicName,
                           trackID: trackID,
                           trackName: trackName,
-                          quizName: quizName,
-                          courseName: courseName,
-
                         });
                       }}
                     >

@@ -7,7 +7,7 @@ import fetchAddress from "../IP_File";
 export default function AddQuizScreen({ route, navigation }) {
   // DropDownPicker.setListMode("SCROLLVIEW");
 
-  const { userID, userType, _id, chapterNo, trackID, trackName, quizName, questions, courseName } = route.params;
+  const { userID, userType, _id, chapterNo, trackID, trackName, quizName, questions } = route.params;
 
   var quiz_id = 1;
   var quiz_name = "quiz ID " + quiz_id;
@@ -89,9 +89,7 @@ export default function AddQuizScreen({ route, navigation }) {
                 chapterNo: chapterNo,
                 trackID: trackID,
                 trackName: trackName,
-                questions: questions,
-                courseName: courseName,
-
+                questions: questions
               });
             }}
             style={styles.addButton}
@@ -114,7 +112,6 @@ export default function AddQuizScreen({ route, navigation }) {
                 chapterNo: chapterNo,
                 trackID: trackID,
                 trackName: trackName,
-                courseName: courseName,
               });
 
             }}

@@ -78,7 +78,7 @@ export default function CourseDetailScreen({ route, navigation }) {
         } catch (e) {
           console.log("The error is: ", e);
         }
-        console.log(data);
+        // console.log(data);
       });
     setChapterNo("");
     setChapterName("");

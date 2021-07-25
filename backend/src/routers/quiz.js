@@ -11,11 +11,11 @@ router.post('/quiz/add', async (req, res) => {
   // console.log("here");
   //console.log(req.body.questions[0].alternatives);
   try {
-    const quizes = await Quiz.find({'courseID': req.query.courseID , 'chapterNo': req.query.chapterNo, 'topicName': req.body.topicName});
-    let cnt = quizes.length + 1;
-    let name = "MCQ Test " + cnt.toString();
+    // const quizes = await Quiz.find({'courseID': req.query.courseID , 'chapterNo': req.query.chapterNo});
+    // let cnt = quizes.length + 1;
+    // let name = "MCQ Test " + cnt.toString();
     const quiz = new Quiz({
-      quizName: name,
+      quizName: req.body.quizName,
       questions: req.body.questions,
       topicName: req.body.topicName? req.body.topicName: "combined",     //optional
       courseID: req.body.courseID,
