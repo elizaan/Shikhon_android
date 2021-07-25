@@ -24,7 +24,6 @@ const PdfScreen = ({route, navigation }) => {
 
   const [showSubmit, setShowSubmit] = useState(0);
 
-  
  
   const changeNoteHandler = (val) => {
     setPdf(val);
@@ -113,8 +112,9 @@ const checkTopicInput = async () => {
           name,
       }
       console.log(source);
-    
-     const pdfurl = await cloudinaryUpload(source);
+      
+      const pdfurl = await cloudinaryUpload(source);
+
       return pdfurl;
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
